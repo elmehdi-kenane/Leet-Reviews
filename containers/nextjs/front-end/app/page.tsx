@@ -3,6 +3,7 @@ import Card from "@/components/Card";
 import Form from "@/components/Form";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { formatDistanceToNow } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
@@ -42,7 +43,7 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
             { headers }
           );
           setData(response.data);
-        
+          console.log("response.data", response.data);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -60,7 +61,8 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
       const sortedData = filteredData.sort((a: any, b: any) =>
         a.name.localeCompare(b.name)
       );
-      setData(sortedData);
+    //   setData(sortedData);
+    //   console.log("response.data", sortedData);
     };
     sortByNameWithKeyword();
 
@@ -99,21 +101,24 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // Months are zero-based, so add 1
     const day = date.getDate();
-    return `${year}: ${month} : ${day}`;
+    const formattedDate = formatDistanceToNow(date, { addSuffix: true });
+    return `${formattedDate} (${year}-${month}-${day})`;
   };
   return (
-<main className="flex items-center h-full min-h-screen min-w-[280px] max-w-[1440px] mt-10 mx-auto p-1 flex-col bg-[#F1F3F5]" style={{ backgroundImage: "url('/backk.jpg')" }}>
+    <main
+      className="flex items-center h-full min-h-screen min-w-[280px] max-w-[1440px] mt-10 mx-auto p-1 flex-col bg-[#F1F3F5]"
+      style={{ backgroundImage: "url('/backk.jpg')" }}
+    >
       <div className="flex  flex-col items-center  w-[90%]  h-full mt-10">
         <div className="flex  justify-end  w-[90%]  ml-auto">
           <Form value={submit} />
         </div>
 
-
         <div className=" w-[90%] lg:w-[900px] mt-10">Total : {data.length}</div>
 
-        {loading ?  (
+        {loading ? (
           // Show Skeleton only when loading
-          
+
           <p className="text-black">loading...</p>
         ) : (
           // Render actual data when not loading
@@ -122,22 +127,21 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
               id={company.id}
               key={company.id}
               contractType={company.Conatract}
-              position={company.Positon}
-              mission={company.progress}
-              name={company.name}
-              status={company.YourStatus}
-              city={company.city}
+              WorkingType={company.Positon}
+              ProgressCheck={company.progress}
+              CompanyName={company.name}
+              //   FeedbackSubtitle={company.comments[0]}
+              JobStatus={company.YourStatus}
+              CompanyLocation={company.city}
               creationDate={Dataform(company)}
-              avatar={company.avatar}
-              linkding={company.linkding}
+              CompanyLogo={company.avatar}
+              CompanyLinkedIn={company.linkding}
               emoji={company.emojistatus}
               creatorid={company.creatorId}
             />
           ))
         )}
-
       </div>
-      
     </main>
   );
 }

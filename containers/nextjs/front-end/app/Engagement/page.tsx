@@ -2,7 +2,6 @@
 import Card from "@/components/Card";
 import Comment from "@/components/Comment";
 import axios from "axios";
-import { Federant } from "next/font/google";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -147,8 +146,16 @@ export default function Engagment() {
               ></textarea>
             </div>
           </div>
-          <div onClick={handlePublish} className="flex justify-end items-end mt-5">
-            <button className={`bg-orange-500 rounded-full w-24 h-7 ${isPublishing ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isPublishing}>
+          <div
+            onClick={handlePublish}
+            className="flex justify-end items-end mt-5"
+          >
+            <button
+              className={`bg-orange-500 rounded-full w-24 h-7 ${
+                isPublishing ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={isPublishing}
+            >
               Publish
             </button>
           </div>
@@ -163,16 +170,18 @@ export default function Engagment() {
           </div>
         </div>
         <div className="w-[100%] h-full  ">
-          {loading? (<p>
-            Loading...
-          </p>) : comments.map((company: any, index) => (
-            <Comment
-              key={index}
-              avatar={company.user.avatar}
-              comment={company.text}
-              login={company.user.login}
-            />
-          ))}
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            comments.map((company: any, index) => (
+              <Comment
+                key={index}
+                avatar={company.user.avatar}
+                comment={company.text}
+                login={company.user.login}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

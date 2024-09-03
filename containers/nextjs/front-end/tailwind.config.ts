@@ -16,6 +16,9 @@ const config: Config = {
       "3xl": "2560px",
     },
     extend: {
+      fontFamily: {
+        inter: ["var(--font-inter)"],
+      },
       spacing: {
         "100": "64rem",
         "30": "30rem",

@@ -9,24 +9,33 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function Card({
-  name = "loading...",
-  status = "full stack develloper",
-  city = "Maroc",
-  contractType = "CDI",
-  mission = "Casablanca",
-  position,
+  CompanyName = "default",
+  JobStatus = "default",
+  CompanyLocation = "default",
+  contractType = "default",
+  ProgressCheck = "default",
+  WorkingType = "default",
   id = 0,
   creationDate = 2024,
-  avatar = "/goodEx.png",
-  linkding = "https://www.linkedin.com/school/1337-coding-school/",
-  emoji = "/goodEx.png",
+  CompanyLogo = "/goodEx.png",
+  CompanyLinkedIn = "https://www.linkedin.com/school/1337-coding-school/",
+  ExperienceRate = "/goodEx.png",
   creatorid = 0,
 }: any) {
   const handleClickCard = (key: any) => {};
 
   const [user, setLogin] = useState("");
-  const [avatarcomeent, setAvatarcomment] = useState<any>([]);
-  const [logincreator, setCreatorlogin] = useState("");
+  const [FeedbackSubtitle, setFeedbackSubtitle] = useState<any>();
+  const [FeedbackAuthorAvatar, setFeedbackAuthorAvatar] = useState<any>();
+  const [AuthorIntraLogin, setAuthorIntraLogin] = useState("");
+
+  const trimFeedbackSubtitle = (originalFeedbackSubtitle: string) => {
+    const maxChars = 190;
+    if (originalFeedbackSubtitle.length <= maxChars)
+      setFeedbackSubtitle(originalFeedbackSubtitle);
+    else
+      setFeedbackSubtitle(originalFeedbackSubtitle.slice(0, maxChars) + "...");
+  };
 
   useEffect(() => {
     async function getUser() {
@@ -42,33 +51,34 @@ export default function Card({
           headers,
         });
         setLogin(user.data.login);
-        const creatorlogin = await axios.get(
+        const AuthorIntraLogin = await axios.get(
           `http://localhost:8000/42/user/?id=${creatorid}`
         );
-        setCreatorlogin(creatorlogin.data.login);
+        setAuthorIntraLogin(AuthorIntraLogin.data.login);
 
-        const usercommented = await axios.get(
+        const userComment = await axios.get(
           `http://localhost:8000/42/getComments/?id=${id}`
         );
-
-        setAvatarcomment(usercommented.data.comments);
+        trimFeedbackSubtitle(userComment.data.comments[0].text);
+        setFeedbackAuthorAvatar(userComment.data.comments[0].user.avatar);
+        console.log(userComment.data.comments[0].user.avatar);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     }
 
     getUser();
-  }, []); 
+  }, []);
   const uniqueUserIds = new Set();
 
   // Filter the array to keep only unique users
-  const uniqueData = avatarcomeent?.filter((item: any) => {
-    if (!uniqueUserIds.has(item.userId)) {
-      uniqueUserIds.add(item.userId);
-      return true;
-    }
-    return false;
-  });
+  //   const uniqueData = FeedbackSubtitle.filter((item: any) => {
+  //     if (!uniqueUserIds.has(item.userId)) {
+  //       uniqueUserIds.add(item.userId);
+  //       return true;
+  //     }
+  //     return false;
+  //   });
 
   const router = useRouter();
 
@@ -79,194 +89,137 @@ export default function Card({
   return (
     <div
       onClick={() => handleClickCard(id)}
-      className="flex  items-center justify-center rounded-md bg-white mt-10  w-[100%] md:w-[100%] lg:w-[900px]  h-[400px] md:h-[230px] shadow-lg hover:shadow-2xl"
+      className="flex justify-between flex-col p-10 rounded-[16px] bg-white mt-10 w-[100%] md:w-[100%] lg:w-[900px]  h-[400px] shadow-lg hover:shadow-2xl font-inter text-[#00224D] gap-3"
     >
-      <div className="flex flex-col justify-between w-[95%] h-[90%] ">
-        <div className=" flex flex-col lg:flex-row  justify-between  w-[100%]  md:h-[60%] lg:h-[50%]  h-auto ">
-          <div className="flex flex-col md:flex-row  md:justify-between gap-3 h-[80%]   lg:w-[80%]  font-bold ">
-            <div className=" h-16 w-16">
+      <div className="flex justify-between">
+        <div className="flex items-center gap-4 h-max">
+          <Image
+            src={CompanyLogo}
+            alt={CompanyLogo}
+            width={125}
+            height={125}
+            className="rounded-full"
+          />
+          <div className="flex flex-col h-full w-full">
+            <div className="font-bold text-2xl flex gap-1 items-center">
+              {CompanyName}
+              <a href={CompanyLinkedIn} target="_blank">
+                <Image src="/LinkedInIcon.svg" alt="" width={40} height={40} />
+              </a>
+            </div>
+            <p className="font-semibold text-xl">{JobStatus}</p>
+            <div className="flex items-center">
+              <p className="font-light">Experience Rate</p>
               <Image
-                src={avatar}
-                alt=""
-                width={500}
-                height={500}
-                className="w-full h-full rounded-full "
-              />
-            </div>
-            <div className="flex justify-between flex-col  h-[100px] md:h-full   md:w-[90%]  overflow-hidden">
-              <h1 className="font-bold"> {name}</h1>
-              <h3>{status}</h3>
-              <div className="flex gap-5">
-                <div
-                  className=" flex text-xs gap-2 cursor-pointer"
-                  onClick={() => {
-                    router.push(
-                      `https://profile.intra.42.fr/users/${logincreator}`
-                    );
-                  }}
-                >
-                  <p> By: </p>
-                  <div className="w-5 h-3">
-                    <Image src="/42.png" alt="" width={50} height={50} />
-                  </div>
-                </div>
-                <div
-                  className="flex gap-2 w-7 h-5 cursor-pointer"
-                  onClick={() =>
-                    router.push(
-                      "https://discord.com/channels/788078738905628682"
-                    )
-                  }
-                >
-                  <h1 className="text-xs"> Discord:</h1>
-                  <Image
-                    src={"/discord.png"}
-                    alt=""
-                    height={1000}
-                    width={1000}
-                    className="w-full h-full"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex lg:flex-wrap md:h-[100px]   w-full lg:w-[60%]  lg:mt-0 mt-auto  lg:items-start items-end overflow-x-scroll lg:overflow-hidden">
-            <div className="flex lg:flex-wrap gap-5 h-auto justify-end">
-              <Badge level="/job.png" mission={position} color="bg-teal-300" />
-              <Badge
-                level="/contract.png"
-                mission={contractType}
-                color="bg-blue-500"
-              />
-              <Badge
-                level="/location.png"
-                mission={city}
-                color="bg-orange-200"
-              />
-              <Badge
-                level="/clock.png"
-                mission={mission}
-                color="bg-green-300"
+                src={ExperienceRate}
+                alt={ExperienceRate}
+                width={20}
+                height={20}
               />
             </div>
           </div>
         </div>
-        <div className="flex w-full justify-between items-center">
-          <div className="flex flex-col">
-            <p className="text-xs">Posted On: {creationDate}</p>
-
-            <div
-              className="flex gap-2 text-xs md:text-base cursor-pointer"
-              onClick={() => router.push(`${linkding}`)}
-            >
-              <p>linkedin company : </p>
-              <div className="w-7 h-7">
-                <Image
-                  src="/link.png"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="w-full h-full"
-                />
-              </div>
+        <div className="flex flex-wrap w-[310px] gap-[10px] h-max font-medium">
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+              <Image
+                src="/WorkLocationIcon.svg"
+                alt="WorkLocationIcon.svg"
+                width={20}
+                height={20}
+              />
             </div>
+            {WorkingType}
           </div>
-          <div className="flex  items-center justify-end mb-2">
-            <div className="flex  flex-col items-center">
-              <img src={emoji} alt="" width={30} height={50} />
-              <p className="text-xs ">Experience Rate </p>
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+              <Image
+                src="/ContractTypeIcon.svg"
+                alt="ContractTypeIcon.svg"
+                width={18}
+                height={18}
+              />
             </div>
+            {contractType}
           </div>
-        </div>
-
-        <div className="flex  justify-between  w-full relative border ">
-          {uniqueData?.length > 0 && (
-            <>
-              <div className="w-7 h-7 rounded-full">
-                <Image
-                  src={uniqueData[0]?.user.avatar}
-                  alt=""
-                  width={300}
-                  height={1000}
-                  className="  rounded-full w-full h-full "
-                />
-              </div>
-
-              {uniqueData?.length > 1 && (
-                <div className="w-7 h-7  absolute">
-                  <Image
-                    src={uniqueData[1]?.user.avatar}
-                    alt=""
-                    width={300}
-                    height={300}
-                    className=" w-full h-full relative left-[15px]  rounded-full"
-                  />
-                </div>
-              )}
-              {uniqueData?.length > 2 && (
-                <div className="w-7 h-7  absolute">
-                  <Image
-                    src={uniqueData[2]?.user.avatar}
-                    alt=""
-                    width={300}
-                    height={300}
-                    className="w-full h-full  left-[30px] rounded-full relative"
-                  />
-                </div>
-              )}
-
-              {uniqueData?.length > 3 && (
-                 <div className="w-7 h-7  absolute">
-                 <Image
-                   src={uniqueData[3]?.user.avatar}
-                   alt=""
-                   width={300}
-                   height={300}
-                   className="w-full h-full  left-[45px] rounded-full relative"
-                 />
-               </div>
-              )}
-              {uniqueData?.length > 4 && (
-                <div className="w-7 h-7  absolute">
-                <Image
-                  src={uniqueData[4]?.user.avatar}
-                  alt=""
-                  width={300}
-                  height={300}
-                  className="w-full h-full  left-[60px] rounded-full relative"
-                />
-              </div>
-              )}
-              {uniqueData?.length > 5 && (
-                <div className="w-7 h-7  absolute">
-                <Image
-                  src={uniqueData[5]?.user.avatar}
-                  alt=""
-                  width={300}
-                  height={300}
-                  className="w-full h-full  left-20 rounded-full relative"
-                />
-              </div>
-              )}
-            </>
-          )}
-
-          <div
-            className={`bg-sky-800 w-20 rounded-full items-center flex justify-center hover:bg-blue-300 ml-auto ${
-              desire ? "block" : "block"
-            } text-white cursor-pointer `}
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+              <Image
+                src="/CompanyCityIcon.svg"
+                alt="CompanyCityIcon.svg"
+                width={20}
+                height={20}
+              />
+            </div>
+            {CompanyLocation}
+          </div>
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+              <Image
+                src="/ProgressCheckIcon.svg"
+                alt="ProgressCheckIcon.svg"
+                width={20}
+                height={20}
+              />
+            </div>
+            {ProgressCheck}
+          </div>
+          <a
+            href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
+            target="_blank"
+            className="ml-auto"
           >
-            <p
-              className="hover:shadow-2xl"
-              onClick={() => {
-                router.push(`/Engagement?id=${id}`);
-              }}
-            >
-              Engage
-            </p>
-          </div>
+            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+              <Image
+                src="/42-logo.svg"
+                alt="42-logo.svg"
+                width={20}
+                height={20}
+              />
+            </div>
+          </a>
         </div>
+      </div>
+      <div className="flex justify-between items-start flex-col">
+        <Image
+          src={FeedbackAuthorAvatar}
+          alt={FeedbackAuthorAvatar}
+          width={50}
+          height={50}
+          className="rounded-full relative z-10"
+        />
+        <div className="border-2 border-[#00224D] p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end">
+          {FeedbackSubtitle}
+        </div>
+      </div>
+      <div className="flex justify-between items-center">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-[5px]">
+            {/* <a href="">
+              <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+                <Image
+                  src="/DiscordIcon.svg"
+                  alt="DiscordIcon.svg"
+                  width={20}
+                  height={20}
+                />
+              </div>
+            </a> */}
+          </div>
+          {creationDate}
+        </div>
+        <Link
+          href={`/Engagement?id=${id}`}
+          className="text-[#FF204E] flex items-center gap-[3px] border-[2px] border-[#FF204E] rounded-xl p-2 h-max"
+        >
+          <Image
+            src="/CommentIcon.svg"
+            alt="CommentIcon.svg"
+            width={20}
+            height={20}
+          />
+          Comment
+        </Link>
       </div>
     </div>
   );
