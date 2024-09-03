@@ -89,10 +89,10 @@ export default function Card({
   return (
     <div
       onClick={() => handleClickCard(id)}
-      className="flex justify-between flex-col p-10 rounded-[16px] bg-white mt-10 w-[100%] md:w-[100%] lg:w-[900px]  h-[400px] shadow-lg hover:shadow-2xl font-inter text-[#00224D] gap-3"
+      className="flex justify-between flex-col p-10 max-sm:px-[5px] max-sm:py-[10px] rounded-[16px] bg-white mt-10 w-[100%] max-w-[900px] h-[400px] max-md:h-max shadow-lg hover:shadow-2xl font-inter text-[#00224D] gap-3"
     >
-      <div className="flex justify-between">
-        <div className="flex items-center gap-4 h-max">
+      <div className="flex justify-between gap-[2px] max-md:flex-col">
+        <div className="flex max-sm:flex-col items-center gap-4 h-max">
           <Image
             src={CompanyLogo}
             alt={CompanyLogo}
@@ -100,14 +100,16 @@ export default function Card({
             height={125}
             className="rounded-full"
           />
-          <div className="flex flex-col h-full w-full">
-            <div className="font-bold text-2xl flex gap-1 items-center">
+          <div className="flex flex-col h-full w-full max-sm:items-center">
+            <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
               {CompanyName}
               <a href={CompanyLinkedIn} target="_blank">
                 <Image src="/LinkedInIcon.svg" alt="" width={40} height={40} />
               </a>
             </div>
-            <p className="font-semibold text-xl">{JobStatus}</p>
+            <p className="font-semibold text-xl max-lg:text-base">
+              {JobStatus}
+            </p>
             <div className="flex items-center">
               <p className="font-light">Experience Rate</p>
               <Image
@@ -119,8 +121,8 @@ export default function Card({
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap w-[310px] gap-[10px] h-max font-medium">
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+        <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] max-lg:w-[270px] max-md:min-w-full gap-[10px] h-max font-medium">
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
             <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
               <Image
                 src="/WorkLocationIcon.svg"
@@ -131,7 +133,7 @@ export default function Card({
             </div>
             {WorkingType}
           </div>
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
             <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
               <Image
                 src="/ContractTypeIcon.svg"
@@ -142,7 +144,7 @@ export default function Card({
             </div>
             {contractType}
           </div>
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
             <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
               <Image
                 src="/CompanyCityIcon.svg"
@@ -153,7 +155,7 @@ export default function Card({
             </div>
             {CompanyLocation}
           </div>
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D] w-[150px] h-[50px] p-[5px]">
+          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
             <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
               <Image
                 src="/ProgressCheckIcon.svg"
@@ -167,7 +169,7 @@ export default function Card({
           <a
             href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
             target="_blank"
-            className="ml-auto"
+            className="w-full flex justify-end"
           >
             <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
               <Image
@@ -180,15 +182,15 @@ export default function Card({
           </a>
         </div>
       </div>
-      <div className="flex justify-between items-start flex-col">
+      <div className="flex justify-between items-start flex-col max-sm:mt-[-35px]">
         <Image
           src={FeedbackAuthorAvatar}
           alt={FeedbackAuthorAvatar}
           width={50}
           height={50}
-          className="rounded-full relative z-10"
+          className="rounded-full relative z-10 border-2 border-[#00224D]"
         />
-        <div className="border-2 border-[#00224D] p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end">
+        <div className="border-2 border-[#00224D] p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px]">
           {FeedbackSubtitle}
         </div>
       </div>
@@ -218,7 +220,7 @@ export default function Card({
             width={20}
             height={20}
           />
-          Comment
+          <p className="max-sm:hidden">Comment</p>
         </Link>
       </div>
     </div>
