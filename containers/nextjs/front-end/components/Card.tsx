@@ -5,8 +5,23 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-
 import axios from "axios";
+import { styled } from "@mui/material/styles";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+
+
+const CustomizedTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#d1d5db",
+    color: "#00224D",
+    fontSize: 11,
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: "#d1d5db",
+  },
+}));
 
 export default function Card({
   CompanyName = "default",
@@ -85,32 +100,66 @@ export default function Card({
   const path = usePathname();
   const proceder = "/Engagement";
   const desire = proceder === path;
-
+  const circleRadius = 15;
   return (
     <div
       onClick={() => handleClickCard(id)}
       className="flex justify-between flex-col p-10 max-sm:px-[5px] max-sm:py-[10px] rounded-[16px] bg-white mt-10 w-[100%] max-w-[900px] h-[400px] max-md:h-max shadow-lg hover:shadow-2xl font-inter text-[#00224D] gap-3"
     >
-      <div className="flex justify-between gap-[2px] max-md:flex-col">
-        <div className="flex max-sm:flex-col items-center gap-4 h-max">
-          <Image
-            src={CompanyLogo}
-            alt={CompanyLogo}
-            width={125}
-            height={125}
-            className="rounded-full"
-          />
+      <div className="flex justify-between gap-[10px] max-md:flex-col items-center">
+        <div className="flex max-sm:flex-col items-center gap-4 h-max md:mt-[-40px]">
+          <div className="flex justify-start items-end rounded-full">
+            <Image
+              src={CompanyLogo}
+              alt={CompanyLogo}
+              width={125}
+              height={125}
+              className="rounded-full"
+            />
+            <CustomizedTooltip
+              placement="bottom"
+              title="Experience Rate"
+              arrow
+            >
+              <div
+                className={`w-[${circleRadius * 2}] h-[${
+                  circleRadius * 2
+                }]  ml-[-30px]`}
+              >
+                <Image
+                  src={ExperienceRate}
+                  alt={ExperienceRate}
+                  width={circleRadius * 2 - 10}
+                  height={circleRadius * 2 - 10}
+                  className="ml-[5px] mb-[-25px] relative z-[9]"
+                />
+                <svg
+                  width={circleRadius * 2}
+                  height={circleRadius * 2}
+                  xmlns="http://www.w3.org/2000/svg"
+                  // className="border border-[blue]"
+                >
+                  <circle
+                    r={circleRadius}
+                    cx={circleRadius}
+                    cy={circleRadius}
+                    fill="#d1d5db"
+                  />
+                </svg>
+              </div>
+            </CustomizedTooltip>
+          </div>
           <div className="flex flex-col h-full w-full max-sm:items-center">
             <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
               {CompanyName}
               <a href={CompanyLinkedIn} target="_blank">
-                <Image src="/LinkedInIcon.svg" alt="" width={40} height={40} />
+                <Image src="/LinkedInIcon.svg" alt="" width={25} height={25} />
               </a>
             </div>
             <p className="font-semibold text-xl max-lg:text-base">
               {JobStatus}
             </p>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <p className="font-light">Experience Rate</p>
               <Image
                 src={ExperienceRate}
@@ -118,7 +167,7 @@ export default function Card({
                 width={20}
                 height={20}
               />
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] max-lg:w-[270px] max-md:min-w-full gap-[10px] h-max font-medium">
