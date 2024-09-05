@@ -123,7 +123,9 @@ export default function Engagment() {
             JobStatus={data.YourStatus}
             CompanyLocation={data.city}
             creationDate={DataFormat(data)}
-            CompanyLogo={data.avatar}
+            CompanyLogo={
+              data.avatar === "" ? "/DefaultCompanyLogo.svg" : data.avatar
+            }
             CompanyLinkedIn={data.linkding}
             emoji={data.emojistatus}
             creatorid={data.creatorId}
@@ -151,10 +153,10 @@ export default function Engagment() {
               ></textarea>
             </div>
           </div>
-          <div className="flex justify-end items-end mt-5">
+          <div className="flex justify-end items-end">
             <button
               onClick={handlePublish}
-              className={`bg-[#FF204E] text-white rounded-2xl w-24 h-7 ${
+              className={`bg-[#FF204E] text-white rounded-lg w-24 h-7 mt-[-10px] ${
                 isPublishing ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={isPublishing}
