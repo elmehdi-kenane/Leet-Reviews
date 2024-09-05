@@ -74,7 +74,7 @@ export class connectController {
   async company(@Body() data: any, @Req() req: any) {
     const id = await this.connect.creatCompany(data, req.user.userId);
     if (data?.feedback?.length > 0) {
-      await this.connect.creatComment(data.feedback, req.user.userId, id.id);
+      await this.connect.creatComment(data.comment, req.user.userId, id.id);
     }
     return id.id;
   }
@@ -86,8 +86,8 @@ export class connectController {
     @Req() req: any,
     @Query('id', ParseIntPipe) companyId: number,
   ) {
-console.log('comment', data.feedback)
-    await this.connect.creatComment(data.feedback, req.user.userId, companyId);
+console.log('comment', data.comment)
+    await this.connect.creatComment(data.comment, req.user.userId, companyId);
   }
 
   @Post('upload')
