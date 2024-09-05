@@ -24,13 +24,13 @@ html, body {
   width: 100%;
 }
 
-body {
+/* body {
   --sb-track-color: #e2e6e8;
   --sb-thumb-color: #b1b2ef;
   --sb-size: 10px;
   scrollbar-color: var(--sb-thumb-color) 
                    var(--sb-track-color);
-}
+} */
 
 /* body::-webkit-scrollbar {
   width: var(--sb-size) 
@@ -50,11 +50,18 @@ body::-webkit-scrollbar-thumb {
   /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #00224D rgba(128, 128, 128, 0.32);
+}
+
+.light-scrollbar {
+    scrollbar-color: white rgba(128, 128, 128, 0.32);
+}
+
+.dark-scrollbar {
+    scrollbar-color: #00224D rgba(128, 128, 128, 0.32);
 }
 
 /* Chrome, Edge, and Safari */
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
   width: 15px;
 }
 
@@ -67,4 +74,4 @@ body::-webkit-scrollbar-thumb {
   background-color: green;
   border-radius: 14px;
   border: 3px solid blue;
-}
+} */
