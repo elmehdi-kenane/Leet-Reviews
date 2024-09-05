@@ -4,7 +4,7 @@ import Comment from "@/components/Comment";
 import axios from "axios";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { DataFormat } from "@/components/utils";
@@ -16,6 +16,7 @@ export default function Engagment() {
   const routeur = useRouter();
   const [isPublishing, setIsPublishing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   interface CompanyData {
     id: number;
@@ -31,9 +32,18 @@ export default function Engagment() {
 
   const param = useSearchParams();
   const id = param?.get("id");
+  const isCommentAreaSelected = param?.get("commentAreaSelected");
+  
   const [comments, setComments] = useState([]);
   const [data, setData] = useState<CompanyData | any>([]);
   var commentsLength = 0;
+
+  useEffect(() => {
+    // Focus on the textarea when the component mounts
+    if (textareaRef && textareaRef.current && isCommentAreaSelected === "true") {
+      textareaRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,12 +154,13 @@ export default function Engagment() {
             </div>
             <div className="w-full h-full">
               <textarea
+                ref={textareaRef}
                 name="feedback"
                 onChange={handleTextareaChange}
                 value={comment}
                 id=""
                 placeholder="Type Your Comment Here..."
-                className="resize-none w-full rounded-2xl p-3"
+                className="resize-none w-full rounded-2xl p-3 focus:outline-none border border-transparent focus:border focus:border-[#00224D]"
               ></textarea>
             </div>
           </div>
