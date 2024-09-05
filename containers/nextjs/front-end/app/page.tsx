@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "react-loading-skeleton";
+import { DataFormat } from "@/components/utils";
 
 export default function Home() {
   const [formCompleted, setFormCompleted] = useState(false);
@@ -92,18 +93,7 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
     };
 
     fetchData();
-  }, [formCompleted]); // The
-
-  const Dataform = (company: any) => {
-    const date = new Date(company.createdAt);
-
-    // Extract year, month, and day
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // Months are zero-based, so add 1
-    const day = date.getDate();
-    const formattedDate = formatDistanceToNow(date, { addSuffix: true });
-    return `${formattedDate} (${year}-${month}-${day})`;
-  };
+  }, [formCompleted]);
   return (
     <main
       className="flex items-center h-full min-h-screen min-w-[280px] max-w-[1440px] mt-10 mx-auto p-1 flex-col bg-[#F1F3F5]"
@@ -133,8 +123,12 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
               //   FeedbackSubtitle={company.comments[0]}
               JobStatus={company.YourStatus}
               CompanyLocation={company.city}
-              creationDate={Dataform(company)}
-              CompanyLogo={company.avatar}
+              creationDate={DataFormat(company)}
+              CompanyLogo={
+                company.avatar === ""
+                  ? "/DefaultCompanyLogo.svg"
+                  : company.avatar
+              }
               CompanyLinkedIn={company.linkding}
               emoji={company.emojistatus}
               creatorid={company.creatorId}
