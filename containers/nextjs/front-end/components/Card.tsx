@@ -6,22 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { styled } from "@mui/material/styles";
-import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
-
-
-const CustomizedTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#d1d5db",
-    color: "#00224D",
-    fontSize: 11,
-  },
-  [`& .${tooltipClasses.arrow}`]: {
-    color: "#d1d5db",
-  },
-}));
+import CustomizedTooltip from "./CustomizedTooltip";
+import { trimFeedbackSubtitle } from "./utils";
 
 export default function Card({
   CompanyName = "default",
@@ -43,14 +29,6 @@ export default function Card({
   const [FeedbackSubtitle, setFeedbackSubtitle] = useState<any>();
   const [FeedbackAuthorAvatar, setFeedbackAuthorAvatar] = useState<any>();
   const [AuthorIntraLogin, setAuthorIntraLogin] = useState("");
-
-  const trimFeedbackSubtitle = (originalFeedbackSubtitle: string) => {
-    const maxChars = 190;
-    if (originalFeedbackSubtitle.length <= maxChars)
-      setFeedbackSubtitle(originalFeedbackSubtitle);
-    else
-      setFeedbackSubtitle(originalFeedbackSubtitle.slice(0, maxChars) + "...");
-  };
 
   useEffect(() => {
     async function getUser() {
@@ -74,9 +52,15 @@ export default function Card({
         const userComment = await axios.get(
           `http://localhost:8000/42/getComments/?id=${id}`
         );
-        trimFeedbackSubtitle(userComment.data.comments[0].text);
-        setFeedbackAuthorAvatar(userComment.data.comments[0].user.avatar);
-        console.log(userComment.data.comments[0].user.avatar);
+        const feedbackSubtitleIndex = userComment.data.comments.length;
+        setFeedbackSubtitle(
+          trimFeedbackSubtitle(
+            userComment.data.comments[feedbackSubtitleIndex - 1].text
+          )
+        );
+        setFeedbackAuthorAvatar(
+          userComment.data.comments[feedbackSubtitleIndex - 1].user.avatar
+        );
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -106,8 +90,8 @@ export default function Card({
       onClick={() => handleClickCard(id)}
       className="flex justify-between flex-col p-10 max-sm:px-[5px] max-sm:py-[10px] rounded-[16px] bg-white mt-10 w-[100%] max-w-[900px] h-[400px] max-md:h-max shadow-lg hover:shadow-2xl font-inter text-[#00224D] gap-3"
     >
-      <div className="flex justify-between gap-[10px] max-md:flex-col items-center">
-        <div className="flex max-sm:flex-col items-center gap-4 h-max md:mt-[-40px]">
+      <div className="flex justify-between gap-[10px] max-md:flex-col">
+        <div className="flex max-sm:flex-col justify-center items-center gap-4 h-max min-h-[110px]">
           <div className="flex justify-start items-end rounded-full">
             <Image
               src={CompanyLogo}
@@ -116,11 +100,7 @@ export default function Card({
               height={125}
               className="rounded-full"
             />
-            <CustomizedTooltip
-              placement="bottom"
-              title="Experience Rate"
-              arrow
-            >
+            <CustomizedTooltip placement="bottom" title="Experience Rate" arrow>
               <div
                 className={`w-[${circleRadius * 2}] h-[${
                   circleRadius * 2
@@ -149,7 +129,7 @@ export default function Card({
               </div>
             </CustomizedTooltip>
           </div>
-          <div className="flex flex-col h-full w-full max-sm:items-center">
+          <div className="flex flex-col h-full w-full max-sm:items-center justify-center">
             <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
               {CompanyName}
               <a href={CompanyLinkedIn} target="_blank">
@@ -215,50 +195,38 @@ export default function Card({
             </div>
             {ProgressCheck}
           </div>
-          <a
-            href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
-            target="_blank"
-            className="w-full flex justify-end"
-          >
-            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
-              <Image
-                src="/42-logo.svg"
-                alt="42-logo.svg"
-                width={20}
-                height={20}
-              />
-            </div>
-          </a>
+          <div className="w-full flex justify-end">
+            <a
+              href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
+              target="_blank"
+              className="w-max"
+            >
+              <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+                <Image
+                  src="/42-logo.svg"
+                  alt="42-logo.svg"
+                  width={20}
+                  height={20}
+                />
+              </div>
+            </a>
+          </div>
         </div>
       </div>
-      <div className="flex justify-between items-start flex-col max-sm:mt-[-35px]">
+      <div className="flex justify-between items-start flex-col mt-[-35px]">
         <Image
           src={FeedbackAuthorAvatar}
           alt={FeedbackAuthorAvatar}
           width={50}
           height={50}
-          className="rounded-full relative z-10 border-2 border-[#00224D]"
+          className="rounded-full relative z-10 border-2 border-[#00224D] mb-1"
         />
         <div className="border-2 border-[#00224D] p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px]">
-          {FeedbackSubtitle}
+          <p className="overflow-x-auto w-full">{FeedbackSubtitle}</p>
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <div className="flex flex-col">
-          <div className="flex items-center gap-[5px]">
-            {/* <a href="">
-              <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
-                <Image
-                  src="/DiscordIcon.svg"
-                  alt="DiscordIcon.svg"
-                  width={20}
-                  height={20}
-                />
-              </div>
-            </a> */}
-          </div>
-          {creationDate}
-        </div>
+        <div className="flex flex-col max-sm:ml-[7px]">{creationDate}</div>
         <Link
           href={`/Engagement?id=${id}`}
           className="text-[#FF204E] flex items-center gap-[3px] border-[2px] border-[#FF204E] rounded-xl p-2 h-max"
