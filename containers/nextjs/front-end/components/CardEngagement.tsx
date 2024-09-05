@@ -18,7 +18,7 @@ export default function CardEngagement({
   id = 0,
   creationDate = 2024,
   CompanyLogo = "/goodEx.png",
-  CompanyLinkedIn = "https://www.linkedin.com/school/1337-coding-school/",
+  LinkedInOfCompany = "",
   ExperienceRate = "/goodEx.png",
   creatorid = 0,
 }: any) {
@@ -53,9 +53,9 @@ export default function CardEngagement({
         );
         const feedbackSubtitleIndex = userComment.data.comments.length;
         setFeedbackSubtitle(
-        //   trimFeedbackSubtitle(
-            userComment.data.comments[feedbackSubtitleIndex - 1].text
-        //   )
+          //   trimFeedbackSubtitle(
+          userComment.data.description
+          //   )
         );
         setFeedbackAuthorAvatar(
           userComment.data.comments[feedbackSubtitleIndex - 1].user.avatar
@@ -131,9 +131,16 @@ export default function CardEngagement({
           <div className="flex flex-col h-full w-full max-sm:items-center">
             <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
               {CompanyName}
-              <a href={CompanyLinkedIn} target="_blank">
-                <Image src="/LinkedInIcon.svg" alt="" width={25} height={25} />
-              </a>
+              {LinkedInOfCompany !== "" && (
+                <a href={LinkedInOfCompany} target="_blank">
+                  <Image
+                    src="/LinkedInIcon.svg"
+                    alt=""
+                    width={25}
+                    height={25}
+                  />
+                </a>
+              )}
             </div>
             <p className="font-semibold text-xl max-lg:text-base">
               {JobStatus}
@@ -194,36 +201,68 @@ export default function CardEngagement({
             </div>
             {ProgressCheck}
           </div>
-          <div className="w-full flex justify-end">
-            <a
-              href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
-              target="_blank"
-              className="w-max"
-            >
-              <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+          {FeedbackSubtitle !== "" && (
+            <div className="w-full h-max flex justify-end relative z-[1]">
+              <a
+                href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
+                target="_blank"
+                className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center"
+              >
                 <Image
                   src="/42-logo.svg"
                   alt="42-logo.svg"
                   width={20}
                   height={20}
                 />
-              </div>
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+      {FeedbackSubtitle !== "" ? (
+        <div className="flex justify-between items-start flex-col mt-[-35px]">
+          <div className="flex items-center gap-2">
+            <Image
+              src={FeedbackAuthorAvatar}
+              alt={FeedbackAuthorAvatar}
+              width={50}
+              height={50}
+              className="rounded-full relative z-10 border-2 border-[#00224D] mb-1"
+            />
+            <p className="mb-[15px]">username</p>
+          </div>
+          <div className="bg-[#00224D] text-white p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px] max-h-[170px] overflow-y-scroll">
+            <p className="overflow-y-auto w-full h-full light-scrollbar">
+              {FeedbackSubtitle}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex bg-[#00224D] text-white justify-between items-center rounded-2xl p-2">
+          <Image
+            src={FeedbackAuthorAvatar}
+            alt={FeedbackAuthorAvatar}
+            width={50}
+            height={50}
+            className="rounded-full relative z-10 border-2 border-[white] mr-[10px]"
+          />
+          username
+          <div className="w-full h-max flex justify-end relative z-[1]">
+            <a
+              href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
+              target="_blank"
+              className="bg-white rounded-full w-[35px] h-[35px] flex justify-center items-center"
+            >
+              <Image
+                src="/42-logo-dark.svg"
+                alt="42-logo-dark.svg"
+                width={20}
+                height={20}
+              />
             </a>
           </div>
         </div>
-      </div>
-      <div className="flex justify-between items-start flex-col max-sm:mt-[-35px]">
-        <Image
-          src={FeedbackAuthorAvatar}
-          alt={FeedbackAuthorAvatar}
-          width={50}
-          height={50}
-          className="rounded-full relative z-10 border-2 border-white mb-2"
-        />
-        <div className="bg-[#00224D] text-white p-4 rounded-2xl w-[98%] h-max mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px]">
-          {FeedbackSubtitle}
-        </div>
-      </div>
+      )}
       <div className="flex justify-end items-center">
         <div className="flex flex-col max-sm:mr-[7px]">{creationDate}</div>
       </div>
