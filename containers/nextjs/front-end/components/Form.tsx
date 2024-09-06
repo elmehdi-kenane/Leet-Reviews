@@ -17,16 +17,79 @@ const Form = (submit: any) => {
   const [backgroundM, setBackgroundM] = useState(false);
   const [backgroundB, setBackgroundB] = useState(false);
 
+  const experienceRating = [
+    {
+      id: 1,
+      icon: "/fun_face.svg",
+      text: "Excellent",
+    },
+    {
+      id: 2,
+      icon: "/regular_face.svg",
+      text: "Good",
+    },
+    {
+      id: 3,
+      icon: "/sad_face.svg",
+      text: "Weak",
+    },
+  ];
+
+  const progressCheck = [
+    {
+      id: 1,
+      text: "In Progress",
+    },
+    {
+      id: 2,
+      text: "Finished",
+    },
+  ];
+
+  const contractType = [
+    {
+      id: 1,
+      text: "Internship",
+    },
+    {
+      id: 2,
+      text: "CDD",
+    },
+    {
+      id: 3,
+      text: "CDI",
+    },
+    {
+      id: 4,
+      text: "Freelance",
+    },
+  ];
+
+  const workLocation = [
+    {
+      id: 1,
+      text: "Remote",
+    },
+    {
+      id: 2,
+      text: "On-Site",
+    },
+    {
+      id: 3,
+      text: "Hybrid",
+    },
+  ];
+
   useEffect(() => {
     const checkTrueState = () => {
       if (backgroundE === true) {
-        setEmoji("/goodEx.png");
+        setEmoji("/fun_face.svg");
       } else if (backgroundM === true) {
-        setEmoji("/mediumEx.png");
+        setEmoji("/regular_face.svg");
       } else if (backgroundB === true) {
-        setEmoji("/badEx.png");
+        setEmoji("/sad_face.svg");
       } else {
-        setEmoji("/goodEx.png");
+        setEmoji("/fun_face.svg");
       }
     };
     checkTrueState();
@@ -41,7 +104,7 @@ const Form = (submit: any) => {
     feedback: "",
     contracttype: "",
     emojistatus: "",
-    image: "https://localhost/uploads/1706121089168-675727346.png",
+    image: "",
   });
 
   const openModal = () => {
@@ -66,7 +129,7 @@ const Form = (submit: any) => {
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
-console.log('file',file)
+    console.log("file", file);
     setFile(file);
   };
 
@@ -142,7 +205,7 @@ console.log('file',file)
       try {
         const token = Cookies.get("token");
         const headers = {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
         response = await axios.post(
@@ -203,7 +266,7 @@ console.log('file',file)
     });
   };
   return (
-    <div className="flex justify-center items-center max-w-[1440px]  text-white rounded-md bg-blue-700 cursor-pointer">
+    <div className="flex justify-center items-center max-w-full  text-white rounded-md bg-blue-700 cursor-pointer">
       <button
         onClick={openModal}
         className="flex items-center justify-center w-[250px] p-1 whitespace-nowrap"
@@ -216,227 +279,175 @@ console.log('file',file)
         onRequestClose={closeModal}
         style={{
           overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          },
-          content: {
-            width: "900px",
-            height: "970px",
-            maxWidth: "900px",
-            margin: "auto",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backdropFilter: "blur(12px)",
           },
         }}
+        className="w-max h-max mx-auto mt-16"
       >
-        {/* <div
-          style={customStyle}
-          className="flex flex-col items-center justify-center w-98 border-black bg-red-700"
-        > */}
         <form
           onSubmit={handleSubmit}
-          className="flex items-center flex-col m-5 bg-whi text-quaternary w-98 rounded-md p-7"
+          className="flex items-center flex-col m-5 w-max h-max bg-[white] border-2 border-quaternary rounded-xl p-7"
         >
-          <div className="font-bold mb-7 p-2 rounded-lg text-xl text-white bg-primary">Share Your Experience</div>
-          <label className="flex flex-col">
-            <div className="font-semibold">Company Name</div>
-            <input
-              type="text"
-              color="black"
-              name="companyName"
-              value={formData.companyName}
-              placeholder="Company Name"
-              className="border border-black rounded-md w-72 h-9 pl-3"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label className="flex flex-col mt-5">
-            <div className="font-semibold">Job Status</div>
-            <input
-              type="text"
-              color="black"
-              name="jobPosition"
-              value={formData.jobPosition}
-              placeholder="Job Status"
-              className="border border-black rounded-md w-72 h-9 pl-3"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-
-          <div className="flex flex-col items-center mt-5">
-            <div className="font-semibold">
-              How You Rate Your Experience in this Company?
-            </div>
-            <div className="flex w-full items-center gap-5 h-full justify-between">
-              <div
-                className={`flex justify-center items-center border w-36 rounded-md
-                  ${
-                    backgroundE ? "bg-lime-300" : ""
-                  } border-black md:w-[32%]   gap-2`}
-                onClick={() => {
-                  setBackground(!backgroundE);
-                  setBackgroundM(false);
-                  setBackgroundB(false);
-                }}
-              >
-                <div className=" h-7 ">
-                  <Image
-                    src={"/goodEx.png"}
-                    alt=""
-                    width={30}
-                    height={10}
-                    className=" h-full"
-                  />
-                </div>
-                <p className="font-light">Excellent</p>
-              </div>
-              <div
-                className={`flex border border-black justify-center items-center w-36 rounded-md ${
-                  backgroundM ? "bg-amber-400" : ""
-                } md:w-[32%] w-full gap-2`}
-                onClick={() => {
-                  setBackgroundM(!backgroundM);
-                  setBackgroundB(false);
-                  setBackground(false);
-                }}
-              >
-                <div className="w-7 h-7">
-                  <Image
-                    src={"/mediumEx.png"}
-                    alt=""
-                    width={30}
-                    height={10}
-                    className="w-full h-full"
-                  />
-                </div>
-                <p className="font-light">Medium</p>
-              </div>
-              <div
-                className={`flex items-center justify-center border w-36 rounded-md ${
-                  backgroundB ? "bg-red-500" : ""
-                } border-black md:w-[32%] w-full gap-2`}
-                onClick={() => {
-                  setBackgroundB(!backgroundB);
-                  setBackground(false);
-                  setBackgroundM(false);
-                }}
-              >
-                <div className="w-7 h-7">
-                  <Image
-                    src={"/badEx.png"}
-                    alt=""
-                    width={30}
-                    height={10}
-                    className="w-full h-full"
-                  />
-                </div>
-                <p className="font-light">Bad</p>
-              </div>
-            </div>
+          <div className="font-bold mb-2 py-2 px-16 rounded-lg w-full text-xl text-primary border-2 border-primary">
+            Share Your Experience
           </div>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">You Still Possed this job</div>
-            <input
-              type="checkbox"
-              name="situation"
-              value={formData.situation}
-              className="border border-black"
-              onChange={handleInputChange}
-              placeholder="Type here"
-            />
-          </label>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Company Location:</div>
-            <select
-              name="moroccanCities"
-              value={formData.moroccanCities}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>
-                Select a city
-              </option>
-              {moroccanCities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Contract Type:</div>
-            <select
-              name="contracttype"
-              value={formData.contracttype}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>
-                Select a Position
-              </option>
-
-              {jobPosition.map((job) => (
-                <option key={job} value={job}>
-                  {job}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Work Location:</div>
-            <select
-              name="workLocation"
-              value={formData.workLocation}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>
-                Select a Work Location
-              </option>
-              {workLocations.map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="flex items-center gap-2 mt-5">
-            <div className="font-semibold">Company LinkedIn URL:</div>
-            <input
-              type="text"
-              name="linkedinUrl"
-              value={formData.linkedinUrl}
-              onChange={handleInputChange}
-              className="border border-black rounded-md p-1"
-              placeholder="Company LinkedIn"
-            />
-          </label>
-
-          <div className="mt-5">
-            <p className="font-semibold">Your Feedback (Optional)</p>
-            <div className="h-[150px] w-96 overflow-y-scroll mt-2">
-              <textarea
-                id="feedback"
+          <div className="w-full flex flex-col items-center rounded-md pt-5 gap-5">
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">Company Name:</div>
+              <input
+                type="text"
+                color="#00224D"
+                name="companyName"
+                value={formData.companyName}
+                placeholder="Company Name"
+                className="border border-quaternary rounded-md w-[95%] h-9 pl-3"
                 onChange={handleInputChange}
-                placeholder="Write your Feedback"
-                name="feedback"
-                className="w-full h-full rounded-md p-3"
-              ></textarea>
+                required
+              />
+            </label>
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">Job Status:</div>
+              <input
+                type="text"
+                color="#00224D"
+                name="jobPosition"
+                value={formData.jobPosition}
+                placeholder="Job Status"
+                className="border border-quaternary rounded-md w-[95%] h-9 pl-3"
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                How You Rate Your Experience In This Company?
+              </div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {experienceRating.map((ex) => {
+                  return (
+                    <button
+                      key={ex.id}
+                      className={`flex justify-center items-center border rounded-md h-9 border-quaternary w-[33.3%]`}
+                    >
+                      <div className="h-5">
+                        <Image
+                          src={ex.icon}
+                          alt={ex.icon}
+                          width={30}
+                          height={10}
+                          className="h-full"
+                        />
+                      </div>
+                      <p className="font-normal">{ex.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">Your Experience:</div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {progressCheck.map((progressCheckItem) => {
+                  return (
+                    <button
+                      key={progressCheckItem.id}
+                      className={`flex justify-center items-center border rounded-md h-9 border-quaternary w-[49%]`}
+                    >
+                      <p className="font-normal">{progressCheckItem.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">Company Location:</div>
+              <input
+                type="text"
+                color="#00224D"
+                name="companyName"
+                value={formData.companyName}
+                placeholder="Search"
+                className="border border-quaternary rounded-md w-[95%] h-9 pl-3"
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">Contract Type:</div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {contractType.map((contractTypeItem) => {
+                  return (
+                    <button
+                      key={contractTypeItem.id}
+                      className={`flex justify-center items-center border rounded-md h-9 border-quaternary w-[49%]`}
+                    >
+                      <p className="font-normal">{contractTypeItem.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">Work Location:</div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {workLocation.map((workLocationItem) => {
+                  return (
+                    <button
+                      key={workLocationItem.id}
+                      className={`flex justify-center items-center border rounded-md h-9 border-quaternary w-[49%]`}
+                    >
+                      <p className="font-normal">{workLocationItem.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">LinkedIn of Company:</div>
+              <input
+                type="text"
+                name="linkedinUrl"
+                value={formData.linkedinUrl}
+                onChange={handleInputChange}
+                className="border border-quaternary rounded-md p-1 w-[95%]"
+                placeholder="LinkedIn of Company"
+              />
+            </label>
+
+            <div className="flex flex-col w-full items-center">
+              <p className="font-semibold w-[95%]">
+                Your Feedback
+                <span className="font-normal w-full">(Optional)</span>:
+              </p>
+              <div className="h-[150px] w-[95%]">
+                <textarea
+                  id="feedback"
+                  onChange={handleInputChange}
+                  placeholder="Write your Feedback"
+                  name="feedback"
+                  className="w-full h-full box-border overflow-y-scroll rounded-md p-3 border-2 border-[#00224D]"
+                ></textarea>
+              </div>
+            </div>
+            <label className="flex flex-col w-[95%]">
+              <div className="font-semibold">Company Image:</div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="file:border-none file:bg-quaternary file:text-white file:rounded-md w-[70%] mx-auto"
+              />
+            </label>
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="bg-[#FF204E] text-white px-4 py-2 rounded-md font-semibold w-full"
+            >
+              Submit
+            </button>
           </div>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Company Image:</div>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          </label>
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="bg-quaternary text-white px-4 py-2 mt-5 rounded-md font-semibold"
-          >
-            Submit
-          </button>
         </form>
-        {/* </div> */}
       </Modal>
     </div>
   );

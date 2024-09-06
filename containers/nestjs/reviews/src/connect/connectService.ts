@@ -113,6 +113,7 @@ export class connectService {
         where: { id: commpanyId },
 
         include: {
+            creator: true,
           comments: {
             include: {
               user: true, // Include the related user for each comment
@@ -126,8 +127,8 @@ export class connectService {
 
       // Access the related comments
       const comments = company;
-
-      // console.log('Comments related to the company:', comments);
+      
+      console.log('Comments related to the company:', comments);
       return comments;
     } catch (error) {
       console.error('Error fetching comments:', error);

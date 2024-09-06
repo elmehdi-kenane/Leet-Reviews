@@ -7,7 +7,11 @@ import Navbar from '@/components/Navbar'
 import { ToastContainer } from 'react-toastify'
 import { usePathname } from 'next/navigation'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 
 export default function RootLayout({
@@ -20,18 +24,18 @@ export default function RootLayout({
   const proceder = "/login";
   const desire = proceder === path;  
   return (
-    
-
-    <html lang="en" className=' bg-[#F1F3F5] mb-5'>
+    <html
+      lang="en"
+      className={`bg-[#F1F3F5] ${inter.variable}`}
+    >
       <body>
-        <header>
-         {!desire && <Navbar />} 
-        </header>
+        <header>{!desire && <Navbar />}</header>
       </body>
 
-      <body className={inter.className} >
-      <ToastContainer />
-        {children}</body>
+      <body className={inter.className}>
+        <ToastContainer />
+        {children}
+      </body>
     </html>
-  )
+  );
 }

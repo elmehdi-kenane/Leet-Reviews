@@ -43,9 +43,9 @@ model Company {
   Positon     String?
   Conatract   String?
   progress    String?
-  avatar      String? @default("http://localhost:8000/uploads/1706546585198-178489636.png")
-  linkding    String? @default("https://www.linkedin.com/school/1337-coding-school/")
-  emojistatus String? @default("/goodEx.png")
+  avatar      String? @default("")
+  linkding    String? @default("")
+  emojistatus String? @default("/fun_face.svg")
 
   // Define a relation to comments on the company
   comments    Comment[] @relation("CommentsOnCompany")
