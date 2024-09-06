@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-const Comment = ({ login, comment, avatar='/goodEx.png' }: any) => {
+const Comment = ({ login, comment, avatar = "/fun_face.svg" }: any) => {
   const [showFullText, setShowFullText] = useState(false);
 
   const handleToggleText = () => {
@@ -25,15 +25,15 @@ const Comment = ({ login, comment, avatar='/goodEx.png' }: any) => {
       <div className="w-[100%] lg:w-[93%] md:w-[83%] h-full  rounded-xl bg-blend-darken">
         <p>{login} </p>
         <div className=" p-2 bg-[#4267B2] rounded-xl mt-2   h-auto ">
-            <p style={{ overflowWrap: "break-word" }}>{displayText}</p>
-            {words.length > 20 && (
-              <button
-                onClick={handleToggleText}
-                className="hover:underline focus:outline-none text-white"
-              >
-                {showFullText ? "Read Less" : "Read More"}
-              </button>
-            )}
+          <p style={{ overflowWrap: "break-word" }}>{displayText}</p>
+          {words.length > 20 && (
+            <button
+              onClick={handleToggleText}
+              className="hover:underline focus:outline-none text-white"
+            >
+              {showFullText ? "Read Less" : "Read More"}
+            </button>
+          )}
         </div>
       </div>
     </div>

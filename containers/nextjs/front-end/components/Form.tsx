@@ -20,13 +20,13 @@ const Form = (submit: any) => {
   useEffect(() => {
     const checkTrueState = () => {
       if (backgroundE === true) {
-        setEmoji("/goodEx.png");
+        setEmoji("/fun_face.svg");
       } else if (backgroundM === true) {
-        setEmoji("/mediumEx.png");
+        setEmoji("/regular_face.svg");
       } else if (backgroundB === true) {
-        setEmoji("/badEx.png");
+        setEmoji("/sad_face.svg");
       } else {
-        setEmoji("/goodEx.png");
+        setEmoji("/fun_face.svg");
       }
     };
     checkTrueState();
@@ -66,7 +66,7 @@ const Form = (submit: any) => {
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
-console.log('file',file)
+    console.log("file", file);
     setFile(file);
   };
 
@@ -142,7 +142,7 @@ console.log('file',file)
       try {
         const token = Cookies.get("token");
         const headers = {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
         response = await axios.post(
@@ -223,7 +223,7 @@ console.log('file',file)
             maxWidth: "900px",
             margin: "auto",
             padding: "5px",
-            marginTop: "20px"
+            marginTop: "20px",
           },
         }}
       >
@@ -279,7 +279,7 @@ console.log('file',file)
                 >
                   <div className="w-7 h-7 ">
                     <Image
-                      src={"/goodEx.png"}
+                      src={"/fun_face.svg"}
                       alt=""
                       width={30}
                       height={10}
@@ -300,7 +300,7 @@ console.log('file',file)
                 >
                   <div className="w-7 h-7">
                     <Image
-                      src={"/mediumEx.png"}
+                      src={"/regular_face.svg"}
                       alt=""
                       width={30}
                       height={10}
@@ -321,7 +321,7 @@ console.log('file',file)
                 >
                   <div className="w-7 h-7">
                     <Image
-                      src={"/badEx.png"}
+                      src={"/sad_face.svg"}
                       alt=""
                       width={30}
                       height={10}
@@ -438,9 +438,6 @@ console.log('file',file)
             >
               Submit
             </button>
-            
-
-
           </form>
         </div>
       </Modal>

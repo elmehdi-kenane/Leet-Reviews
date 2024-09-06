@@ -137,7 +137,7 @@ export default function Engagment() {
               data.avatar === "" ? "/DefaultCompanyLogo.svg" : data.avatar
             }
             CompanyLinkedIn={data.linkding}
-            emoji={data.emojistatus}
+            ExperienceRate={data.emojistatus}
             creatorid={data.creatorId}
           />
         )}

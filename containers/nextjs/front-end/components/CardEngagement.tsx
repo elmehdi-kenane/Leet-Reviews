@@ -17,9 +17,9 @@ export default function CardEngagement({
   WorkingType = "default",
   id = 0,
   creationDate = 2024,
-  CompanyLogo = "/goodEx.png",
+  CompanyLogo = "/fun_face.svg",
   LinkedInOfCompany = "",
-  ExperienceRate = "/goodEx.png",
+  ExperienceRate = "/fun_face.svg",
   creatorid = 0,
 }: any) {
   const handleClickCard = (key: any) => {};
@@ -27,6 +27,7 @@ export default function CardEngagement({
   const [user, setLogin] = useState("");
   const [FeedbackSubtitle, setFeedbackSubtitle] = useState<any>();
   const [FeedbackAuthorAvatar, setFeedbackAuthorAvatar] = useState<any>();
+  const [FeedbackAuthorUsername, setFeedbackAuthorUsername] = useState<any>();
   const [AuthorIntraLogin, setAuthorIntraLogin] = useState("");
 
   useEffect(() => {
@@ -48,17 +49,14 @@ export default function CardEngagement({
         );
         setAuthorIntraLogin(AuthorIntraLogin.data.login);
 
-        const userComment = await axios.get(
+        const feedbackDetails = await axios.get(
           `http://localhost:8000/42/getComments/?id=${id}`
         );
-        const feedbackSubtitleIndex = userComment.data.comments.length;
-        setFeedbackSubtitle(
-          //   trimFeedbackSubtitle(
-          userComment.data.description
-          //   )
-        );
-        setFeedbackAuthorAvatar(
-          userComment.data.comments[feedbackSubtitleIndex - 1].user.avatar
+        setFeedbackSubtitle(feedbackDetails.data.description);
+        setFeedbackAuthorAvatar(feedbackDetails.data.creator.avatar);
+        setFeedbackAuthorUsername(
+          feedbackDetails.data.creator.login[0].toUpperCase() +
+            feedbackDetails.data.creator.login.slice(1)
         );
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -156,7 +154,7 @@ export default function CardEngagement({
             </div> */}
           </div>
         </div>
-        <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] max-lg:w-[270px] max-md:min-w-full gap-[10px] h-max font-medium">
+        <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] max-lg:w-[270px] max-md:min-w-full gap-[10px] max-sm:w-full h-max font-medium">
           <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
             <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
               <Image
@@ -229,7 +227,7 @@ export default function CardEngagement({
               height={50}
               className="rounded-full relative z-10 border-2 border-[#00224D] mb-1"
             />
-            <p className="mb-[15px]">username</p>
+            <p className="mb-[15px] font-semibold">{FeedbackAuthorUsername}</p>
           </div>
           <div className="bg-[#00224D] text-white p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px] max-h-[170px] overflow-y-scroll">
             <p className="overflow-y-auto w-full h-full light-scrollbar">

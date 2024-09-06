@@ -72,22 +72,23 @@ export class connectController {
   @Post('companys')
   @UseGuards(JwtAuthGuard)
   async company(@Body() data: any, @Req() req: any) {
+    console.log("data", data);
+    
     const id = await this.connect.creatCompany(data, req.user.userId);
-    if (data?.feedback?.length > 0) {
-      await this.connect.creatComment(data.comment, req.user.userId, id.id);
-    }
+    // if (data?.feedback?.length > 0) {
+    //     await this.connect.creatComment(data.feedback, req.user.userId, id.id);
+    // }
     return id.id;
-  }
+}
 
-  @Post('comments')
-  @UseGuards(JwtAuthGuard)
-  async comment(
+@Post('comments')
+@UseGuards(JwtAuthGuard)
+async comment(
     @Body() data: any,
     @Req() req: any,
     @Query('id', ParseIntPipe) companyId: number,
-  ) {
-console.log('comment', data.comment)
-    await this.connect.creatComment(data.comment, req.user.userId, companyId);
+) {
+    await this.connect.creatComment(data.feedback, req.user.userId, companyId);
   }
 
   @Post('upload')
