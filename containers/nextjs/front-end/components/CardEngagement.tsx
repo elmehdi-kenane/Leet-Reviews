@@ -30,6 +30,29 @@ export default function CardEngagement({
   const [FeedbackAuthorUsername, setFeedbackAuthorUsername] = useState<any>();
   const [AuthorIntraLogin, setAuthorIntraLogin] = useState("");
 
+  const employmentDetails = [
+    {
+      id: 1,
+      icon: "/WorkLocationIcon.svg",
+      text: WorkingType,
+    },
+    {
+      id: 2,
+      icon: "/ContractTypeIcon.svg",
+      text: contractType,
+    },
+    {
+      id: 1,
+      icon: "/CompanyCityIcon.svg",
+      text: CompanyLocation,
+    },
+    {
+      id: 1,
+      icon: "/ProgressCheckIcon.svg",
+      text: ProgressCheck,
+    },
+  ];
+
   useEffect(() => {
     async function getUser() {
       try {
@@ -160,57 +183,34 @@ export default function CardEngagement({
             </div> */}
           </div>
         </div>
-        <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] max-lg:w-[270px] max-md:min-w-full gap-[10px] max-sm:w-full h-max font-medium">
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
-            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
-              <Image
-                src="/WorkLocationIcon.svg"
-                alt="WorkLocationIcon.svg"
-                width={20}
-                height={20}
-              />
-            </div>
-            {WorkingType}
-          </div>
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
-            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
-              <Image
-                src="/ContractTypeIcon.svg"
-                alt="ContractTypeIcon.svg"
-                width={18}
-                height={18}
-              />
-            </div>
-            {contractType}
-          </div>
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
-            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
-              <Image
-                src="/CompanyCityIcon.svg"
-                alt="CompanyCityIcon.svg"
-                width={20}
-                height={20}
-              />
-            </div>
-            {CompanyLocation}
-          </div>
-          <div className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[140px] h-[50px] p-[5px] max-lg:text-sm">
-            <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
-              <Image
-                src="/ProgressCheckIcon.svg"
-                alt="ProgressCheckIcon.svg"
-                width={20}
-                height={20}
-              />
-            </div>
-            {ProgressCheck}
-          </div>
+        <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] lg:w-[310px] max-md:min-w-full gap-[10px] max-sm:w-full max-sm:gap-[5px] h-max font-medium">
+          {employmentDetails.map((employmentDetail) => {
+            return (
+              <div
+                key={employmentDetail.id}
+                className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[120px] h-[50px] p-[5px] max-lg:text-sm"
+              >
+                <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+                  <Image
+                    src={employmentDetail.icon}
+                    alt={employmentDetail.icon}
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                {employmentDetail.text}
+              </div>
+            );
+          })}
           {FeedbackSubtitle !== "" && (
             <div className="w-full h-max flex justify-end relative z-[1]">
               <a
-                href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}
+                href={`https://profile.intra.42.fr/users/${FeedbackAuthorUsername}`}
                 target="_blank"
                 className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 <Image
                   src="/42-logo.svg"
@@ -250,7 +250,7 @@ export default function CardEngagement({
             height={50}
             className="rounded-full relative z-10 border-2 border-[white] mr-[10px]"
           />
-          username
+          <p className="font-semibold">{FeedbackAuthorUsername}</p>
           <div className="w-full h-max flex justify-end relative z-[1]">
             <a
               href={`https://profile.intra.42.fr/users/${AuthorIntraLogin}`}

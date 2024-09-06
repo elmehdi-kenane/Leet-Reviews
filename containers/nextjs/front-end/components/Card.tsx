@@ -80,7 +80,10 @@ export default function Card({
           trimFeedbackSubtitle(feedbackDetails.data.description)
         );
         setFeedbackAuthorAvatar(feedbackDetails.data.creator.avatar);
-        setFeedbackAuthorUsername(feedbackDetails.data.creator.login);
+        setFeedbackAuthorUsername(
+          feedbackDetails.data.creator.login[0].toUpperCase() +
+            feedbackDetails.data.creator.login.slice(1)
+        );
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -223,13 +226,16 @@ export default function Card({
       </div>
       {FeedbackSubtitle !== "" ? (
         <div className="flex justify-between items-start flex-col mt-[-35px]">
-          <Image
-            src={FeedbackAuthorAvatar}
-            alt={FeedbackAuthorAvatar}
-            width={50}
-            height={50}
-            className="rounded-full relative z-10 border-2 border-[#00224D] mb-1"
-          />
+          <div className="flex items-center gap-2">
+            <Image
+              src={FeedbackAuthorAvatar}
+              alt={FeedbackAuthorAvatar}
+              width={50}
+              height={50}
+              className="rounded-full relative z-10 border-2 border-[#00224D] mb-1"
+            />
+            <p className="mb-[15px] font-semibold">{FeedbackAuthorUsername}</p>
+          </div>
           <div className="border-2 border-[#00224D] p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px]">
             <p className="overflow-x-auto w-full dark-scrollbar">
               {FeedbackSubtitle}
@@ -237,14 +243,17 @@ export default function Card({
           </div>
         </div>
       ) : (
-        <div className="flex border-2 border-[#00224D] rounded-2xl justify-start items-center p-2 gap-[5px]">
-          <Image
-            src={FeedbackAuthorAvatar}
-            alt={FeedbackAuthorAvatar}
-            width={50}
-            height={50}
-            className="rounded-full relative z-10 border-2 border-[#00224D]"
-          />
+        <div className="flex border-2 border-[#00224D] rounded-2xl justify-between items-center p-2 gap-[5px]">
+          <div className="flex items-center gap-2">
+            <Image
+              src={FeedbackAuthorAvatar}
+              alt={FeedbackAuthorAvatar}
+              width={50}
+              height={50}
+              className="rounded-full relative z-10 border-2 border-[#00224D]"
+            />
+            <p className="font-semibold">{FeedbackAuthorUsername}</p>
+          </div>
           <div className="w-max h-max flex">
             <a
               href={`https://profile.intra.42.fr/users/${FeedbackAuthorUsername}`}
@@ -262,44 +271,24 @@ export default function Card({
               />
             </a>
           </div>
-          <Link
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            href={`/Engagement?id=${id}&commentAreaSelected=${true}`}
-            className="text-[#FF204E] bg-white hover:bg-[#FF204E] hover:text-white flex items-center gap-[3px] border-[2px] border-[#FF204E] rounded-xl p-2 h-max w-max ml-auto"
-          >
-            <Image
-              src={`${
-                isHovered ? "/CommentIconLight.svg" : "/CommentIcon.svg"
-              }`}
-              alt="CommentIcon.svg"
-              width={20}
-              height={20}
-            />
-            <p className="max-sm:hidden">Comment</p>
-          </Link>
         </div>
       )}
       <div className="flex justify-between items-center">
         <div className="flex flex-col max-sm:ml-[7px]">{creationDate}</div>
-        {FeedbackSubtitle !== "" && (
-          <Link
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            href={`/Engagement?id=${id}&commentAreaSelected=${true}`}
-            className="text-[#FF204E] flex item hover:bg-[#FF204E] hover:text-white s-center gap-[3px] border-[2px] border-[#FF204E] rounded-xl p-2 h-max"
-          >
-            <Image
-              src={`${
-                isHovered ? "/CommentIconLight.svg" : "/CommentIcon.svg"
-              }`}
-              alt="CommentIcon.svg"
-              width={20}
-              height={20}
-            />
-            <p className="max-sm:hidden">Comment</p>
-          </Link>
-        )}
+        <Link
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          href={`/Engagement?id=${id}&commentAreaSelected=${true}`}
+          className="text-[#FF204E] flex item hover:bg-[#FF204E] hover:text-white s-center gap-[3px] border-[2px] border-[#FF204E] rounded-xl p-2 h-max"
+        >
+          <Image
+            src={`${isHovered ? "/CommentIconLight.svg" : "/CommentIcon.svg"}`}
+            alt="CommentIcon.svg"
+            width={20}
+            height={20}
+          />
+          <p className="max-sm:hidden">Comment</p>
+        </Link>
       </div>
     </Link>
   );
