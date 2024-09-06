@@ -136,7 +136,7 @@ export default function Engagment() {
             CompanyLogo={
               data.avatar === "" ? "/DefaultCompanyLogo.svg" : data.avatar
             }
-            CompanyLinkedIn={data.linkding}
+            LinkedInOfCompany={data.linkding}
             ExperienceRate={data.emojistatus}
             creatorid={data.creatorId}
           />

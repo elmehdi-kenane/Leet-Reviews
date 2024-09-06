@@ -130,7 +130,13 @@ export default function CardEngagement({
             <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
               {CompanyName}
               {LinkedInOfCompany !== "" && (
-                <a href={LinkedInOfCompany} target="_blank">
+                <a
+                  href={LinkedInOfCompany}
+                  target="_blank"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
                   <Image
                     src="/LinkedInIcon.svg"
                     alt=""

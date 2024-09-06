@@ -160,7 +160,13 @@ export default function Card({
             <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
               {CompanyName}
               {LinkedInOfCompany !== "" && (
-                <a href={LinkedInOfCompany} target="_blank">
+                <a
+                  href={LinkedInOfCompany}
+                  target="_blank"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
                   <Image
                     src="/LinkedInIcon.svg"
                     alt=""
@@ -200,6 +206,9 @@ export default function Card({
                 href={`https://profile.intra.42.fr/users/${FeedbackAuthorUsername}`}
                 target="_blank"
                 className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 <Image
                   src="/42-logo.svg"
@@ -241,6 +250,9 @@ export default function Card({
               href={`https://profile.intra.42.fr/users/${FeedbackAuthorUsername}`}
               target="_blank"
               className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
             >
               <Image
                 src="/42-logo.svg"
