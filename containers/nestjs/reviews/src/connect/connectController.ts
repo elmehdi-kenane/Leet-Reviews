@@ -88,7 +88,7 @@ async comment(
     @Req() req: any,
     @Query('id', ParseIntPipe) companyId: number,
 ) {
-    await this.connect.creatComment(data.feedback, req.user.userId, companyId);
+    await this.connect.creatComment(data.comment, req.user.userId, companyId);
   }
 
   @Post('upload')
