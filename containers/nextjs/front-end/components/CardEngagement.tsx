@@ -53,6 +53,10 @@ export default function CardEngagement({
     },
   ];
 
+  let experienceRating;
+  if (ExperienceRate === "/fun_face.svg") experienceRating = "Excellent";
+  else if (ExperienceRate === "/regular_face.svg") experienceRating = "Good";
+  else if (ExperienceRate === "/sad_face.svg") experienceRating = "Weak";
   useEffect(() => {
     async function getUser() {
       try {
@@ -120,7 +124,11 @@ export default function CardEngagement({
               height={125}
               className="rounded-full"
             />
-            <CustomizedTooltip placement="bottom" title="Experience Rate" arrow>
+            <CustomizedTooltip
+              placement="bottom"
+              title={`${experienceRating} Experience`}
+              arrow
+            >
               <div
                 className={`w-[${circleRadius * 2}] h-[${
                   circleRadius * 2
