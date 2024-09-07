@@ -191,7 +191,7 @@ export default function Card({
                 key={employmentDetail.id}
                 className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[120px] h-[50px] p-[5px] max-lg:text-sm"
               >
-                <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+                <div className="bg-[#00224D] rounded-full min-w-[35px] min-h-[35px] flex justify-center items-center">
                   <Image
                     src={employmentDetail.icon}
                     alt={employmentDetail.icon}
@@ -232,7 +232,7 @@ export default function Card({
               alt={FeedbackAuthorAvatar}
               width={50}
               height={50}
-              className="rounded-full relative z-10 border-2 border-[#00224D] mb-1"
+              className="rounded-full relative z-[9] border-2 border-[#00224D] mb-1"
             />
             <p className="mb-[15px] font-semibold">{FeedbackAuthorUsername}</p>
           </div>
@@ -250,7 +250,7 @@ export default function Card({
               alt={FeedbackAuthorAvatar}
               width={50}
               height={50}
-              className="rounded-full relative z-10 border-2 border-[#00224D]"
+              className="rounded-full relative z-[9] border-2 border-[#00224D]"
             />
             <p className="font-semibold">{FeedbackAuthorUsername}</p>
           </div>

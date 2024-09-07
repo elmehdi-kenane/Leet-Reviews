@@ -118,7 +118,7 @@ export default function Engagment() {
   };
 
   return (
-    <div className="flex flex-col items-center mt-10  min-w-[280px] bg-[#F1F3F5] md:h-screen h-full w-full fixed">
+    <div className="flex flex-col items-center mt-10  min-w-[280px] md:h-screen h-full w-full fixed">
       <div className="flex flex-col w-[90%]  justify-between items-center">
         {loading === true ? (
           <div>loading</div>
@@ -177,7 +177,7 @@ export default function Engagment() {
           </div>
         </div>
       </div>
-      <div className=" lg:w-[900px] w-[90%] mt-16">
+      <div className=" lg:w-[900px] w-[90%] my-[50px]">
         <div className="flex justify-between">
           {/* <p>{`Total:  ${comments?.length}`}</p> */}
           <div className="flex" onClick={() => setRefreach(!refresh)}>
@@ -192,21 +192,23 @@ export default function Engagment() {
             <div
               className={`flex flex-col items-center ${
                 comments.length === 0 ? "justify-center" : "justify-start"
-              } gap-5 border-2 border-[#00224D] h-max min-h-[200px] max-h-[500px] w-full px-2 py-5 rounded-3xl overflow-y-auto`}
+              } gap-5 border-2 border-[#00224D] h-max min-h-[200px] max-h-[500px] w-full px-3 py-3 rounded-3xl mb-[50px]`}
             >
               {comments.length === 0 ? (
                 <div className="text-xl font-semibold text-[white] bg-[#FF204E] p-3 rounded-xl">
                   Leave The First Comment and Make An Impact!
                 </div>
               ) : (
-                comments.map((company: any, index) => (
-                  <Comment
-                    key={index}
-                    avatar={company.user.avatar}
-                    comment={company.text}
-                    login={company.user.login}
-                  />
-                ))
+                <div className="w-full h-full overflow-y-auto rounded-3xl">
+                  {comments.map((company: any, index) => (
+                    <Comment
+                      key={index}
+                      avatar={company.user.avatar}
+                      comment={company.text}
+                      login={company.user.login}
+                    />
+                  ))}
+                </div>
               )}
             </div>
           )}

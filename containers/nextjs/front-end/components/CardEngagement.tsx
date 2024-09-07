@@ -235,7 +235,7 @@ export default function CardEngagement({
             />
             <p className="mb-[15px] font-semibold">{FeedbackAuthorUsername}</p>
           </div>
-          <div className="bg-[#00224D] text-white p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px] max-h-[170px] overflow-y-scroll">
+          <div className="bg-[#00224D] text-white p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px] max-h-[170px]">
             <p className="overflow-y-auto w-full h-full light-scrollbar">
               {FeedbackSubtitle}
             </p>
