@@ -120,7 +120,7 @@ const Form = (submit: any) => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  const handleFormChange = (element: string, newValue: string) => {
+  const handleFormChange = (element: string, newValue: string | File) => {
     console.log("element", element);
     console.log("newValue", newValue);
 
@@ -182,14 +182,14 @@ const Form = (submit: any) => {
   }, []);
 
   const handleupload = async (id: any) => {
-    const formData = new FormData();
-    formData.append("image", file);
+    const companyLogoFile = new FormData();
+    companyLogoFile.append("image", formData.image);
 
     if (formData) {
       try {
         const response = await axios.post(
           `http://localhost:8000/42/upload/?id=${id}`,
-          formData
+          companyLogoFile
         );
 
         if (response) {
@@ -275,7 +275,8 @@ const Form = (submit: any) => {
         toast.success(" Created ... ", {
           position: "top-center",
         });
-
+        console.log(response.data);
+        
         handleupload(response.data);
 
         routeur.push(`/Engagement?id=${response.data}`);
@@ -581,7 +582,8 @@ const Form = (submit: any) => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                  handleFormChange("image", e.target.value);
+                    if (e.target.files)
+                      handleFormChange("image", e.target.files[0]);
                 }}
                 className={`file:border-none hover:file:bg-primary file:bg-quaternary file:text-white file:rounded-md w-[70%] mx-auto`}
               />

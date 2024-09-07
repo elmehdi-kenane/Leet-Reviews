@@ -127,8 +127,6 @@ export class connectService {
 
       // Access the related comments
       const comments = company;
-      
-      console.log('Comments related to the company:', comments);
       return comments;
     } catch (error) {
       console.error('Error fetching comments:', error);

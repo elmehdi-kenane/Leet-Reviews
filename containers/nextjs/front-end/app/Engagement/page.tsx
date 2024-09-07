@@ -195,7 +195,7 @@ export default function Engagment() {
               } gap-5 border-2 border-[#00224D] h-max min-h-[200px] max-h-[500px] w-full px-3 py-3 rounded-3xl mb-[50px]`}
             >
               {comments.length === 0 ? (
-                <div className="text-xl font-semibold text-[white] bg-[#FF204E] p-3 rounded-xl">
+                <div className="text-xl font-semibold text-center text-[white] bg-[#FF204E] p-3 rounded-xl">
                   Leave The First Comment and Make An Impact!
                 </div>
               ) : (

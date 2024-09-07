@@ -190,7 +190,7 @@ export default function CardEngagement({
                 key={employmentDetail.id}
                 className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[120px] h-[50px] p-[5px] max-lg:text-sm"
               >
-                <div className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center">
+                <div className="bg-[#00224D] rounded-full min-w-[35px] min-h-[35px] flex justify-center items-center">
                   <Image
                     src={employmentDetail.icon}
                     alt={employmentDetail.icon}
