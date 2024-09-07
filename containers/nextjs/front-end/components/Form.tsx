@@ -349,9 +349,9 @@ const Form = (submit: any) => {
         <form
           onSubmit={handleSubmit}
           ref={formRef}
-          className="flex items-center flex-col w-full max-w-[500px] h-max bg-[white] border-2 border-quaternary rounded-xl p-7 overflow-y-auto"
+          className="flex items-center flex-col w-full max-w-[500px] h-max bg-[white] border-2 border-quaternary border-opacity-[0.1] rounded-xl p-7 overflow-y-auto"
         >
-          <div className="font-bold mb-2 py-2 px-16 rounded-lg w-full text-xl text-white bg-quaternary text-center">
+          <div className="font-medium mb-2 py-2 px-16 rounded-lg w-full text-lg text-white bg-quaternary text-center">
             Share Your Experience
           </div>
           <div className="w-full flex flex-col items-center rounded-md pt-5 gap-5">
@@ -569,7 +569,7 @@ const Form = (submit: any) => {
                   }}
                   placeholder="Write your Feedback"
                   name="feedback"
-                  className="w-full h-full box-border overflow-y-scroll rounded-md p-3 border border-[#00224D] max-h-[140px] focus:outline-none focus:border focus:border-primary"
+                  className="w-full h-full box-border overflow-y-scroll rounded-md p-3 border border-[#00224D] max-h-[140px] min-h-[50px] focus:outline-none focus:border focus:border-primary"
                 ></textarea>
               </div>
             </div>
@@ -582,8 +582,8 @@ const Form = (submit: any) => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                    if (e.target.files)
-                      handleFormChange("image", e.target.files[0]);
+                  if (e.target.files)
+                    handleFormChange("image", e.target.files[0]);
                 }}
                 className={`file:border-none hover:file:bg-primary file:bg-quaternary file:text-white file:rounded-md w-[70%] mx-auto`}
               />

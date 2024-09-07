@@ -104,7 +104,7 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
           <Form value={submit} />
         </div>
 
-        <div className=" w-[90%] lg:w-[900px] mt-10">Total : {data.length}</div>
+        {/* <div className=" w-[90%] lg:w-[900px] mt-10">Total : {data.length}</div> */}
 
         {loading ? (
           // Show Skeleton only when loading
