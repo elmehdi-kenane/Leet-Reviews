@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://postgres:postgres@localhost:5432/mydb?schema=public"
 }
 
 
@@ -45,7 +45,7 @@ model Company {
   progress    String?
   avatar      String? @default("")
   linkding    String? @default("")
-  emojistatus String? @default("/goodEx.png")
+  emojistatus String? @default("/fun_face.svg")
 
   // Define a relation to comments on the company
   comments    Comment[] @relation("CommentsOnCompany")

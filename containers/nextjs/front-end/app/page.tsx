@@ -120,7 +120,6 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
               WorkingType={company.Positon}
               ProgressCheck={company.progress}
               CompanyName={company.name}
-              //   FeedbackSubtitle={company.comments[0]}
               JobStatus={company.YourStatus}
               CompanyLocation={company.city}
               creationDate={DataFormat(company)}
@@ -129,8 +128,8 @@ const token = tokenCookie ? tokenCookie.split('=')[1] : null;
                   ? "/DefaultCompanyLogo.svg"
                   : company.avatar
               }
-              CompanyLinkedIn={company.linkding}
-              emoji={company.emojistatus}
+              LinkedInOfCompany={company.linkding}
+              ExperienceRate={company.emojistatus}
               creatorid={company.creatorId}
             />
           ))
