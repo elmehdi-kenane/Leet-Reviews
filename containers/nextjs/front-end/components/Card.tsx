@@ -5,28 +5,59 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-
 import axios from "axios";
+import CustomizedTooltip from "./CustomizedTooltip";
+import { trimFeedbackSubtitle } from "./utils";
+import { log } from "console";
 
 export default function Card({
-  name = "loading...",
-  status = "full stack develloper",
-  city = "Maroc",
-  contractType = "CDI",
-  mission = "Casablanca",
-  position,
+  CompanyName = "default",
+  JobStatus = "default",
+  CompanyLocation = "default",
+  contractType = "default",
+  ProgressCheck = "default",
+  WorkingType = "default",
   id = 0,
   creationDate = 2024,
-  avatar = "/goodEx.png",
-  linkding = "https://www.linkedin.com/school/1337-coding-school/",
-  emoji = "/goodEx.png",
+  CompanyLogo = "/fun_face.svg",
+  LinkedInOfCompany = "",
+  ExperienceRate = "/fun_face.svg",
   creatorid = 0,
 }: any) {
   const handleClickCard = (key: any) => {};
 
   const [user, setLogin] = useState("");
-  const [avatarcomeent, setAvatarcomment] = useState<any>([]);
-  const [logincreator, setCreatorlogin] = useState("");
+  const [FeedbackSubtitle, setFeedbackSubtitle] = useState<any>();
+  const [FeedbackAuthorAvatar, setFeedbackAuthorAvatar] = useState<any>();
+  const [FeedbackAuthorUsername, setFeedbackAuthorUsername] = useState<any>();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const employmentDetails = [
+    {
+      id: 1,
+      icon: "/WorkLocationIcon.svg",
+      text: WorkingType,
+    },
+    {
+      id: 2,
+      icon: "/ContractTypeIcon.svg",
+      text: contractType,
+    },
+    {
+      id: 3,
+      icon: "/CompanyCityIcon.svg",
+      text: CompanyLocation,
+    },
+    {
+      id: 4,
+      icon: "/ProgressCheckIcon.svg",
+      text: ProgressCheck,
+    },
+  ];
+  let experienceRating;
+  if (ExperienceRate === "/fun_face.svg") experienceRating = "Excellent";
+  else if (ExperienceRate === "/regular_face.svg") experienceRating = "Good";
+  else if (ExperienceRate === "/sad_face.svg") experienceRating = "Weak";
 
   useEffect(() => {
     async function getUser() {
@@ -42,232 +73,223 @@ export default function Card({
           headers,
         });
         setLogin(user.data.login);
-        const creatorlogin = await axios.get(
-          `http://localhost:8000/42/user/?id=${creatorid}`
-        );
-        setCreatorlogin(creatorlogin.data.login);
-
-        const usercommented = await axios.get(
+        const feedbackDetails = await axios.get(
           `http://localhost:8000/42/getComments/?id=${id}`
         );
-
-        setAvatarcomment(usercommented.data.comments);
+        setFeedbackSubtitle(
+          trimFeedbackSubtitle(feedbackDetails.data.description)
+        );
+        setFeedbackAuthorAvatar(feedbackDetails.data.creator.avatar);
+        setFeedbackAuthorUsername(
+          feedbackDetails.data.creator.login[0].toUpperCase() +
+            feedbackDetails.data.creator.login.slice(1)
+        );
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     }
 
     getUser();
-  }, []); 
+  }, []);
   const uniqueUserIds = new Set();
 
   // Filter the array to keep only unique users
-  const uniqueData = avatarcomeent?.filter((item: any) => {
-    if (!uniqueUserIds.has(item.userId)) {
-      uniqueUserIds.add(item.userId);
-      return true;
-    }
-    return false;
-  });
+  //   const uniqueData = FeedbackSubtitle.filter((item: any) => {
+  //     if (!uniqueUserIds.has(item.userId)) {
+  //       uniqueUserIds.add(item.userId);
+  //       return true;
+  //     }
+  //     return false;
+  //   });
 
   const router = useRouter();
 
   const path = usePathname();
   const proceder = "/Engagement";
   const desire = proceder === path;
-
+  const circleRadius = 15;
   return (
-    <div
+    <Link
+      href={`/Engagement?id=${id}&commentAreaSelected=${false}`}
       onClick={() => handleClickCard(id)}
-      className="flex  items-center justify-center rounded-md bg-white mt-10  w-[100%] md:w-[100%] lg:w-[900px]  h-[400px] md:h-[230px] shadow-lg hover:shadow-2xl"
+      className={`flex justify-between flex-col p-10 max-sm:px-[5px] max-sm:py-[10px] rounded-[16px] bg-white mt-10 w-[100%] max-w-[900px] ${
+        FeedbackSubtitle === "" ? "h-[330px" : "h-[370px"
+      } max-md:h-max shadow-lg hover:shadow-2xl font-inter text-[#00224D] gap-[10px]`}
     >
-      <div className="flex flex-col justify-between w-[95%] h-[90%] ">
-        <div className=" flex flex-col lg:flex-row  justify-between  w-[100%]  md:h-[60%] lg:h-[50%]  h-auto ">
-          <div className="flex flex-col md:flex-row  md:justify-between gap-3 h-[80%]   lg:w-[80%]  font-bold ">
-            <div className=" h-16 w-16">
-              <Image
-                src={avatar}
-                alt=""
-                width={500}
-                height={500}
-                className="w-full h-full rounded-full "
-              />
-            </div>
-            <div className="flex justify-between flex-col  h-[100px] md:h-full   md:w-[90%]  overflow-hidden">
-              <h1 className="font-bold"> {name}</h1>
-              <h3>{status}</h3>
-              <div className="flex gap-5">
-                <div
-                  className=" flex text-xs gap-2 cursor-pointer"
-                  onClick={() => {
-                    router.push(
-                      `https://profile.intra.42.fr/users/${logincreator}`
-                    );
+      <div className="flex justify-between gap-[10px] max-md:flex-col">
+        <div className="flex max-sm:flex-col justify-center items-center gap-4 h-max min-h-[110px]">
+          <div className="flex justify-start items-end rounded-full">
+            <Image
+              src={CompanyLogo}
+              alt={CompanyLogo}
+              width={125}
+              height={125}
+              className="rounded-full"
+            />
+            <CustomizedTooltip
+              placement="bottom"
+              title={`${experienceRating} Experience`}
+              arrow
+            >
+              <div
+                className={`w-[${circleRadius * 2}] h-[${
+                  circleRadius * 2
+                }]  ml-[-30px]`}
+              >
+                <Image
+                  src={ExperienceRate}
+                  alt={ExperienceRate}
+                  width={circleRadius * 2 - 10}
+                  height={circleRadius * 2 - 10}
+                  className="ml-[5px] mb-[-25px] relative z-[9]"
+                />
+                <svg
+                  width={circleRadius * 2}
+                  height={circleRadius * 2}
+                  xmlns="http://www.w3.org/2000/svg"
+                  // className="border border-[blue]"
+                >
+                  <circle
+                    r={circleRadius}
+                    cx={circleRadius}
+                    cy={circleRadius}
+                    fill="#d1d5db"
+                  />
+                </svg>
+              </div>
+            </CustomizedTooltip>
+          </div>
+          <div className="flex flex-col h-full w-full max-sm:items-center justify-center">
+            <div className="font-bold text-2xl max-lg:text-lg flex gap-1 items-center">
+              {CompanyName}
+              {LinkedInOfCompany !== "" && (
+                <a
+                  href={LinkedInOfCompany}
+                  target="_blank"
+                  onClick={(e) => {
+                    e.stopPropagation();
                   }}
                 >
-                  <p> By: </p>
-                  <div className="w-5 h-3">
-                    <Image src="/42.png" alt="" width={50} height={50} />
-                  </div>
-                </div>
-                <div
-                  className="flex gap-2 w-7 h-5 cursor-pointer"
-                  onClick={() =>
-                    router.push(
-                      "https://discord.com/channels/788078738905628682"
-                    )
-                  }
-                >
-                  <h1 className="text-xs"> Discord:</h1>
                   <Image
-                    src={"/discord.png"}
+                    src="/LinkedInIcon.svg"
                     alt=""
-                    height={1000}
-                    width={1000}
-                    className="w-full h-full"
+                    width={25}
+                    height={25}
                   />
-                </div>
-              </div>
+                </a>
+              )}
             </div>
-          </div>
-
-          <div className="flex lg:flex-wrap md:h-[100px]   w-full lg:w-[60%]  lg:mt-0 mt-auto  lg:items-start items-end overflow-x-scroll lg:overflow-hidden">
-            <div className="flex lg:flex-wrap gap-5 h-auto justify-end">
-              <Badge level="/job.png" mission={position} color="bg-teal-300" />
-              <Badge
-                level="/contract.png"
-                mission={contractType}
-                color="bg-blue-500"
-              />
-              <Badge
-                level="/location.png"
-                mission={city}
-                color="bg-orange-200"
-              />
-              <Badge
-                level="/clock.png"
-                mission={mission}
-                color="bg-green-300"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="flex w-full justify-between items-center">
-          <div className="flex flex-col">
-            <p className="text-xs">Posted On: {creationDate}</p>
-
-            <div
-              className="flex gap-2 text-xs md:text-base cursor-pointer"
-              onClick={() => router.push(`${linkding}`)}
-            >
-              <p>linkedin company : </p>
-              <div className="w-7 h-7">
-                <Image
-                  src="/link.png"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="w-full h-full"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex  items-center justify-end mb-2">
-            <div className="flex  flex-col items-center">
-              <img src={emoji} alt="" width={30} height={50} />
-              <p className="text-xs ">Experience Rate </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex  justify-between  w-full relative border ">
-          {uniqueData?.length > 0 && (
-            <>
-              <div className="w-7 h-7 rounded-full">
-                <Image
-                  src={uniqueData[0]?.user.avatar}
-                  alt=""
-                  width={300}
-                  height={1000}
-                  className="  rounded-full w-full h-full "
-                />
-              </div>
-
-              {uniqueData?.length > 1 && (
-                <div className="w-7 h-7  absolute">
-                  <Image
-                    src={uniqueData[1]?.user.avatar}
-                    alt=""
-                    width={300}
-                    height={300}
-                    className=" w-full h-full relative left-[15px]  rounded-full"
-                  />
-                </div>
-              )}
-              {uniqueData?.length > 2 && (
-                <div className="w-7 h-7  absolute">
-                  <Image
-                    src={uniqueData[2]?.user.avatar}
-                    alt=""
-                    width={300}
-                    height={300}
-                    className="w-full h-full  left-[30px] rounded-full relative"
-                  />
-                </div>
-              )}
-
-              {uniqueData?.length > 3 && (
-                 <div className="w-7 h-7  absolute">
-                 <Image
-                   src={uniqueData[3]?.user.avatar}
-                   alt=""
-                   width={300}
-                   height={300}
-                   className="w-full h-full  left-[45px] rounded-full relative"
-                 />
-               </div>
-              )}
-              {uniqueData?.length > 4 && (
-                <div className="w-7 h-7  absolute">
-                <Image
-                  src={uniqueData[4]?.user.avatar}
-                  alt=""
-                  width={300}
-                  height={300}
-                  className="w-full h-full  left-[60px] rounded-full relative"
-                />
-              </div>
-              )}
-              {uniqueData?.length > 5 && (
-                <div className="w-7 h-7  absolute">
-                <Image
-                  src={uniqueData[5]?.user.avatar}
-                  alt=""
-                  width={300}
-                  height={300}
-                  className="w-full h-full  left-20 rounded-full relative"
-                />
-              </div>
-              )}
-            </>
-          )}
-
-          <div
-            className={`bg-sky-800 w-20 rounded-full items-center flex justify-center hover:bg-blue-300 ml-auto ${
-              desire ? "block" : "block"
-            } text-white cursor-pointer `}
-          >
-            <p
-              className="hover:shadow-2xl"
-              onClick={() => {
-                router.push(`/Engagement?id=${id}`);
-              }}
-            >
-              Engage
+            <p className="font-semibold text-xl max-lg:text-base">
+              {JobStatus}
             </p>
           </div>
         </div>
+        <div className="flex items-center flex-wrap max-md:justify-end max-sm:justify-center w-[310px] lg:w-[310px] max-md:min-w-full gap-[10px] max-sm:w-full max-sm:gap-[5px] h-max font-medium">
+          {employmentDetails.map((employmentDetail) => {
+            return (
+              <div
+                key={employmentDetail.id}
+                className="flex items-center gap-[5px] rounded-[14px] border border-[#00224D]  w-[150px] max-lg:w-[48%] max-md:max-w-[120px] h-[50px] p-[5px] max-lg:text-sm"
+              >
+                <div className="bg-[#00224D] rounded-full min-w-[35px] min-h-[35px] flex justify-center items-center">
+                  <Image
+                    src={employmentDetail.icon}
+                    alt={employmentDetail.icon}
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                {employmentDetail.text}
+              </div>
+            );
+          })}
+          {FeedbackSubtitle !== "" && (
+            <div className="w-full h-max flex justify-end relative z-[1]">
+              <a
+                href={`https://profile.intra.42.fr/users/${FeedbackAuthorUsername}`}
+                target="_blank"
+                className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <Image
+                  src="/42-logo.svg"
+                  alt="42-logo.svg"
+                  width={20}
+                  height={20}
+                />
+              </a>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      {FeedbackSubtitle !== "" ? (
+        <div className="flex justify-between items-start flex-col mt-[-35px]">
+          <div className="flex items-center gap-2">
+            <Image
+              src={FeedbackAuthorAvatar}
+              alt={FeedbackAuthorAvatar}
+              width={50}
+              height={50}
+              className="rounded-full relative z-[9] border-2 border-[#00224D] mb-1"
+            />
+            <p className="mb-[15px] font-semibold">{FeedbackAuthorUsername}</p>
+          </div>
+          <div className="border-2 border-[#00224D] p-4 rounded-2xl w-[98%] mt-[-20px] relative self-end max-lg:text-xs max-sm:text-[9px] max-sm:leading-[12px]">
+            <p className="overflow-x-auto w-full dark-scrollbar">
+              {FeedbackSubtitle}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex border-2 border-[#00224D] rounded-2xl justify-between items-center p-2 gap-[5px]">
+          <div className="flex items-center gap-2">
+            <Image
+              src={FeedbackAuthorAvatar}
+              alt={FeedbackAuthorAvatar}
+              width={50}
+              height={50}
+              className="rounded-full relative z-[9] border-2 border-[#00224D]"
+            />
+            <p className="font-semibold">{FeedbackAuthorUsername}</p>
+          </div>
+          <div className="w-max h-max flex">
+            <a
+              href={`https://profile.intra.42.fr/users/${FeedbackAuthorUsername}`}
+              target="_blank"
+              className="bg-[#00224D] rounded-full w-[35px] h-[35px] flex justify-center items-center"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <Image
+                src="/42-logo.svg"
+                alt="42-logo.svg"
+                width={20}
+                height={20}
+              />
+            </a>
+          </div>
+        </div>
+      )}
+      <div className="flex justify-between items-center">
+        <div className="flex flex-col max-sm:ml-[7px]">{creationDate}</div>
+        <Link
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          href={`/Engagement?id=${id}&commentAreaSelected=${true}`}
+          className="text-[#FF204E] flex item hover:bg-[#FF204E] hover:text-white s-center gap-[3px] border-[2px] border-[#FF204E] rounded-xl p-2 h-max"
+        >
+          <Image
+            src={`${isHovered ? "/CommentIconLight.svg" : "/CommentIcon.svg"}`}
+            alt="CommentIcon.svg"
+            width={20}
+            height={20}
+          />
+          <p className="max-sm:hidden">Comment</p>
+        </Link>
+      </div>
+    </Link>
   );
 }

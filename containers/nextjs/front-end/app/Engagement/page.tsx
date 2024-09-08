@@ -1,23 +1,22 @@
 "use client";
-import Card from "@/components/Card";
+import CardEngagement from "@/components/CardEngagement";
 import Comment from "@/components/Comment";
 import axios from "axios";
-import { Federant } from "next/font/google";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { DataFormat } from "@/components/utils";
 
 export default function Engagment() {
-  const [feedback, setFeedback] = useState("");
+  const [comment, setComment] = useState("");
   const [refresh, setRefreach] = useState(false);
   const [avatar, setAvatar] = useState("");
-  const routeur = useRouter()
+  const routeur = useRouter();
   const [isPublishing, setIsPublishing] = useState(false);
   const [loading, setLoading] = useState(true);
-
-
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   interface CompanyData {
     id: number;
@@ -33,45 +32,57 @@ export default function Engagment() {
 
   const param = useSearchParams();
   const id = param?.get("id");
+  const isCommentAreaSelected = param?.get("commentAreaSelected");
+  
   const [comments, setComments] = useState([]);
   const [data, setData] = useState<CompanyData | any>([]);
   var commentsLength = 0;
+
+  useEffect(() => {
+    // Focus on the textarea when the component mounts
+    if (textareaRef && textareaRef.current && isCommentAreaSelected === "true") {
+      textareaRef.current.focus();
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = Cookies.get('token')
+        const token = Cookies.get("token");
 
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
           // other headers...
         };
-        const user = await axios.get('http://localhost:8000/42/me', { headers })
-        setAvatar(user.data.avatar)
+        const user = await axios.get("http://localhost:8000/42/me", {
+          headers,
+        });
+        setAvatar(user.data.avatar);
         const url = `http://localhost:8000/42/getComments/?id=${id}`;
         const response = await axios.get(url);
         setComments(response.data.comments);
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
-      }finally {
+      } finally {
         setLoading(false); // Set loading to false when API call completes
       }
     };
 
     fetchData();
-  }, [id, refresh]);
+  }, []);
 
   const handlePublish = async () => {
-    if (isPublishing || feedback.trim().length === 0) {
+    if (isPublishing || comment.trim().length === 0) {
       return;
     }
 
     try {
       setIsPublishing(true);
 
-      const token = Cookies.get('token')
-      console.log('token engagment', token)
+      const token = Cookies.get("token");
+      console.log("token engagment", token);
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -79,21 +90,19 @@ export default function Engagment() {
       };
 
       const url = `http://localhost:8000/42/comments/?id=${id}`;
-      console.log('comment going', feedback)
-      const status = await axios.post(url, { feedback }, { headers });
+      console.log("comment going", comment);
+      const status = await axios.post(url, { comment }, { headers });
       //  Refresh comments after posting
 
       const refreshedData = await axios.get(
         `http://localhost:8000/42/getComments/?id=${id}`
       );
       setComments(refreshedData.data.comments);
-      console.log('comments', refreshedData.data)
+      console.log("comments", refreshedData.data);
     } catch (error) {
-
-      routeur.push('/login')
+      routeur.push("/login");
       console.error("Error fetching data:", error);
-    }
-    finally {
+    } finally {
       setIsPublishing(false);
       setTimeout(() => {
         setIsPublishing(false);
@@ -101,78 +110,108 @@ export default function Engagment() {
     }
 
     // Clear feedback after posting
-    setFeedback("");
+    setComment("");
   };
 
   const handleTextareaChange = (event: any) => {
-    setFeedback(event.target.value);
-    console.log("comment to send", feedback);
+    setComment(event.target.value);
   };
 
-
   return (
-    <div className="flex flex-col items-center mt-10  min-w-[280px] bg-[#F1F3F5] md:h-screen h-full   w-full">
-      <div className="flex flex-col w-[90%]  justify-between items-center ">
-        <Card
-          id={data.id}
-          key={data.id}
-          contractType={data.Conatract}
-          position={data.Positon}
-          mission={data.progress}
-          name={data.name}
-          status={data.YourStatus}
-          city={data.city}
-          avatar={data.avatar}
-          emoji={data.emojistatus}
-        />
-        <div className=" w-[100%] lg:w-[900px]   h-[90px] mt-5 ">
+    <div className="flex flex-col items-center mt-10  min-w-[280px] md:h-screen h-full w-full fixed">
+      <div className="flex flex-col w-[90%]  justify-between items-center">
+        {loading === true ? (
+          <div>loading</div>
+        ) : (
+          <CardEngagement
+            id={data.id}
+            key={data.id}
+            contractType={data.Conatract}
+            WorkingType={data.Positon}
+            ProgressCheck={data.progress}
+            CompanyName={data.name}
+            JobStatus={data.YourStatus}
+            CompanyLocation={data.city}
+            creationDate={DataFormat(data)}
+            CompanyLogo={
+              data.avatar === "" ? "/DefaultCompanyLogo.svg" : data.avatar
+            }
+            LinkedInOfCompany={data.linkding}
+            ExperienceRate={data.emojistatus}
+            creatorid={data.creatorId}
+          />
+        )}
+        <div className=" w-[100%] lg:w-[900px] h-[90px] mt-5 ">
           <div className="flex w-full gap-2 h-full">
             <div>
               <Image
                 src={avatar}
                 alt=""
-                width={50}
-                height={50}
+                width={40}
+                height={40}
                 className="rounded-full"
               />
             </div>
-            <div className="overflow-y-auto w-full h-full">
+            <div className="w-full h-full">
               <textarea
+                ref={textareaRef}
                 name="feedback"
                 onChange={handleTextareaChange}
-                value={feedback}
+                value={comment}
                 id=""
-                placeholder="Type your Feedback Here..."
-                className="h-full w-full rounded-2xl p-2"
+                placeholder="Type Your Comment Here..."
+                className="resize-none w-full rounded-2xl p-3 focus:outline-none border border-transparent focus:border focus:border-[#00224D]"
               ></textarea>
             </div>
           </div>
-          <div onClick={handlePublish} className="flex justify-end items-end mt-5">
-            <button className={`bg-orange-500 rounded-full w-24 h-7 ${isPublishing ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isPublishing}>
+          <div className="flex justify-end items-end">
+            <button
+              onClick={handlePublish}
+              className={`bg-[#FF204E] text-white rounded-lg w-24 h-7 mt-[-10px] ${
+                isPublishing ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={isPublishing}
+            >
               Publish
             </button>
           </div>
         </div>
       </div>
-      <div className=" lg:w-[900px] w-[90%] h-full  mt-16  ">
+      <div className=" lg:w-[900px] w-[90%] my-[50px]">
         <div className="flex justify-between">
-          <p>{`Total:  ${comments?.length}`}</p>
+          {/* <p>{`Total:  ${comments?.length}`}</p> */}
           <div className="flex" onClick={() => setRefreach(!refresh)}>
             <Image src={"/reload.png"} width={25} height={30} alt="" />
             <button>Refresh</button>
           </div>
         </div>
-        <div className="w-[100%] h-full  ">
-          {loading? (<p>
-            Loading...
-          </p>) : comments.map((company: any, index) => (
-            <Comment
-              key={index}
-              avatar={company.user.avatar}
-              comment={company.text}
-              login={company.user.login}
-            />
-          ))}
+        <div className="w-[100%]">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div
+              className={`flex flex-col items-center ${
+                comments.length === 0 ? "justify-center" : "justify-start"
+              } gap-5 border-2 border-[#00224D] h-max min-h-[200px] max-h-[500px] w-full px-3 py-3 rounded-3xl mb-[50px]`}
+            >
+              {comments.length === 0 ? (
+                <div className="text-xl font-semibold text-center text-[white] bg-[#FF204E] p-3 rounded-xl">
+                  Leave The First Comment and Make An Impact!
+                </div>
+              ) : (
+                <div className="w-full h-full overflow-y-auto rounded-3xl">
+                  {comments.map((company: any, index) => (
+                    <Comment
+                      key={index}
+                      avatar={company.user.avatar}
+                      comment={company.text}
+                      login={company.user.login}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

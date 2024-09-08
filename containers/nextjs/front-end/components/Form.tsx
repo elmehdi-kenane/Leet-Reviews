@@ -3,82 +3,193 @@
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Modal from "react-modal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import { set } from "date-fns";
 
 const Form = (submit: any) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [file, setFile] = useState("");
-  const [emoji, setEmoji] = useState("null");
-  const [backgroundE, setBackground] = useState(false);
-  const [backgroundM, setBackgroundM] = useState(false);
-  const [backgroundB, setBackgroundB] = useState(false);
-
-  useEffect(() => {
-    const checkTrueState = () => {
-      if (backgroundE === true) {
-        setEmoji("/goodEx.png");
-      } else if (backgroundM === true) {
-        setEmoji("/mediumEx.png");
-      } else if (backgroundB === true) {
-        setEmoji("/badEx.png");
-      } else {
-        setEmoji("/goodEx.png");
-      }
-    };
-    checkTrueState();
-  }, [backgroundB, backgroundE, backgroundM]);
+  const [emoji, setEmoji] = useState("");
+  const [experienceRatingState, setExperienceRatingState] = useState("");
+  const [progressCheckState, setProgressCheckState] = useState("");
+  const [contractTypeState, setContractTypeState] = useState("");
+  const [workLocationState, setWorkLocationState] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     companyName: "",
     situation: "",
     jobPosition: "",
     linkedinUrl: "",
-    moroccanCities: "",
+    moroccanCities: "casablanca",
     workLocation: "",
     feedback: "",
     contracttype: "",
     emojistatus: "",
-    image: "https://localhost/uploads/1706121089168-675727346.png",
+    image: "",
   });
 
-  const openModal = () => {
-    setModalIsOpen(true);
+  const experienceRating = [
+    {
+      id: 1,
+      icon: "/fun_face.svg",
+      lightIcon: "/fun_face_light.svg",
+      text: "Excellent",
+    },
+    {
+      id: 2,
+      icon: "/regular_face.svg",
+      lightIcon: "/regular_face_light.svg",
+      text: "Good",
+    },
+    {
+      id: 3,
+      icon: "/sad_face.svg",
+      lightIcon: "/sad_face_light.svg",
+      text: "Weak",
+    },
+  ];
+
+  const progressCheck = [
+    {
+      id: 1,
+      text: "In Progress",
+    },
+    {
+      id: 2,
+      text: "Finished",
+    },
+  ];
+
+  const contractType = [
+    {
+      id: 1,
+      text: "Internship",
+    },
+    {
+      id: 2,
+      text: "CDD",
+    },
+    {
+      id: 3,
+      text: "CDI",
+    },
+    {
+      id: 4,
+      text: "Freelance",
+    },
+  ];
+
+  const workLocation = [
+    {
+      id: 1,
+      text: "Remote",
+    },
+    {
+      id: 2,
+      text: "On-Site",
+    },
+    {
+      id: 3,
+      text: "Hybrid",
+    },
+  ];
+
+  //   useEffect(() => {
+  //     const updateExperienceRating = () => {
+  //       if (experienceRatingState === experienceRating[0].text)
+  //         setEmoji("/fun_face.svg");
+  //       else if (experienceRatingState === experienceRating[1].text)
+  //         setEmoji("/regular_face.svg");
+  //       else if (experienceRatingState === experienceRating[2].text)
+  //         setEmoji("/sad_face.svg");
+  //     };
+  //     updateExperienceRating();
+  //     const updateProgressCheck = () => {
+  //       if (progressCheckState === progressCheck[0].text) setEmoji("/fun_face.svg");
+  //       else if (progressCheckState === progressCheck[0].text)
+  //         setEmoji("/regular_face.svg");
+  //     };
+  //     updateProgressCheck();
+  //   }, [experienceRatingState, progressCheckState]);
+
+  const toggleModal = () => {
+    setModalIsOpen(!modalIsOpen);
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  const handleInputChange = (e: any) => {
-    const { name, value, type, checked } = e.target;
-
-    // Use checked for checkbox, otherwise use the value
-    const inputValue = type === "checkbox" ? checked : value;
+  const handleFormChange = (element: string, newValue: string | File) => {
+    console.log("element", element);
+    console.log("newValue", newValue);
 
     setFormData((prevData) => ({
       ...prevData,
-      [name]: inputValue,
+      [element]: newValue,
     }));
   };
 
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-console.log('file',file)
-    setFile(file);
+  //   const handleInputChange = (e: any) => {
+  //     console.log("...handleInputChange...");
+
+  //     const { name, value, type, checked } = e.target;
+
+  //     // Use checked for checkbox, otherwise use the value
+  //     const inputValue = type === "checkbox" ? checked : value;
+
+  //     console.log("name", name);
+  //     console.log("value", value);
+  //     console.log("type", type);
+  //     console.log("inputValue", inputValue);
+
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [name]: inputValue,
+  //     }));
+  //   };
+
+  //   const handleImageChange = (e: any) => {
+  //     const file = e.target.files[0];
+  //     console.log("file", file);
+  //     setFile(file);
+  //   };
+
+  useEffect(() => {
+    if (modalIsOpen) {
+      // Disable scrolling
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scrolling
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [modalIsOpen]);
+  const handleClickOutside = (event: any) => {
+    if (formRef && formRef.current && !formRef.current.contains(event.target)) {
+      setModalIsOpen(false);
+    }
   };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleupload = async (id: any) => {
-    const formData = new FormData();
-    formData.append("image", file);
+    const companyLogoFile = new FormData();
+    companyLogoFile.append("image", formData.image);
 
     if (formData) {
       try {
         const response = await axios.post(
           `http://localhost:8000/42/upload/?id=${id}`,
-          formData
+          companyLogoFile
         );
 
         if (response) {
@@ -116,6 +227,17 @@ console.log('file',file)
     ) {
       // Display an error message, prevent submission, or take any other action
       console.error("Company Name is required");
+      console.log("formData.companyName   -   ", formData.companyName);
+      console.log("formData.situation   -   ", formData.situation);
+      console.log("formData.jobPosition   -   ", formData.jobPosition);
+      console.log("formData.linkedinUrl   -   ", formData.linkedinUrl);
+      console.log("formData.moroccanCities   -   ", formData.moroccanCities);
+      console.log("formData.workLocation   -   ", formData.workLocation);
+      console.log("formData.feedback   -   ", formData.feedback);
+      console.log("formData.contracttype   -   ", formData.contracttype);
+      console.log("formData.image   -   ", formData.image);
+      console.log("emojistatus   -   ", formData.emojistatus);
+
       notify();
 
       return;
@@ -134,7 +256,7 @@ console.log('file',file)
       feedback: formData.feedback,
       contracttype: formData.contracttype,
       image: formData.image,
-      emojistatus: emoji,
+      emojistatus: formData.emojistatus,
     };
 
     var response;
@@ -142,7 +264,7 @@ console.log('file',file)
       try {
         const token = Cookies.get("token");
         const headers = {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
         response = await axios.post(
@@ -153,7 +275,8 @@ console.log('file',file)
         toast.success(" Created ... ", {
           position: "top-center",
         });
-
+        console.log(response.data);
+        
         handleupload(response.data);
 
         routeur.push(`/Engagement?id=${response.data}`);
@@ -163,15 +286,9 @@ console.log('file',file)
       }
     };
     CreatCompnys();
-    closeModal();
+    toggleModal();
   };
 
-  const workLocations = [
-    "Remote",
-    "On-site",
-    "Hybird",
-    // Add more options as needed
-  ];
   const moroccanCities = [
     "Casablanca",
     "Rabat",
@@ -203,242 +320,283 @@ console.log('file',file)
     });
   };
   return (
-    <div className="flex justify-center items-center max-w-[1440px]  text-white rounded-md bg-primary cursor-pointer ml-20">
+    <div className="flex justify-center items-center max-w-full  text-white rounded-md bg-blue-700 cursor-pointer">
       <button
-        onClick={openModal}
-        className="flex items-center justify-center w-[250px] whitespace-nowrap py-2 gap-3"
+        onClick={() => {
+          toggleModal();
+        }}
+        className="flex items-center justify-center w-[250px] p-1 whitespace-nowrap"
       >
         <Image src="/plus.svg" alt="" width={30} height={30} />
         <span className="font-semibold text-white">Share Your Experience</span>
       </button>
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        onRequestClose={() => {
+          toggleModal;
+        }}
         style={{
           overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          },
-          content: {
-            width: "900px",
-            height: "970px",
-            maxWidth: "900px",
-            margin: "auto",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backdropFilter: "blur(12px)",
+            // position: "relative",
+            zIndex: "9",
+            overflow: "auto",
           },
         }}
+        className="w-full mx-auto mt-[100px] mb-[50px] flex justify-center"
       >
-        {/* <div
-          style={customStyle}
-          className="flex flex-col items-center justify-center w-98 border-black bg-red-700"
-        > */}
         <form
           onSubmit={handleSubmit}
-          className="flex items-center flex-col m-5 bg-whi text-quaternary w-98 rounded-md p-7"
+          ref={formRef}
+          className="flex items-center flex-col w-full max-w-[500px] h-max bg-[white] border-2 border-quaternary border-opacity-[0.1] rounded-xl p-7 overflow-y-auto"
         >
-          <div className="font-bold mb-7 p-2 rounded-lg text-xl text-white bg-primary">
+          <div className="font-medium mb-2 py-2 px-16 rounded-lg w-full text-lg text-white bg-quaternary text-center">
             Share Your Experience
           </div>
-          <label className="flex flex-col">
-            <div className="font-semibold">Company Name</div>
+          <div className="w-full flex flex-col items-center rounded-md pt-5 gap-5">
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                Company Name:<span className="text-red-500 text-sm">*</span>
+              </div>
+              <input
+                type="text"
+                color="#00224D"
+                name="companyName"
+                value={formData.companyName}
+                placeholder="Company Name"
+                className="border border-quaternary rounded-md w-[95%] h-9 pl-3 focus:outline-none focus:border focus:border-primary"
+                onChange={(e) => {
+                  handleFormChange("companyName", e.target.value);
+                }}
+                required
+              />
+            </label>
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                Job Status:<span className="text-red-500 text-sm">*</span>
+              </div>
+              <input
+                type="text"
+                color="#00224D"
+                name="jobPosition"
+                value={formData.jobPosition}
+                placeholder="Job Status"
+                className="border border-quaternary rounded-md w-[95%] h-9 pl-3 focus:outline-none focus:border focus:border-primary"
+                onChange={(e) => {
+                  handleFormChange("jobPosition", e.target.value);
+                }}
+                required
+              />
+            </label>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                How You Rate Your Experience In This Company?
+                <span className="text-red-500 text-sm">*</span>
+              </div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {experienceRating.map((ex) => {
+                  return (
+                    <button
+                      key={ex.id}
+                      type="button"
+                      name="ExperienceRate"
+                      value={formData.emojistatus}
+                      className={`border border-quaternary w-[100%] flex justify-center items-center gap-[5px] rounded-md h-9 ${
+                        experienceRatingState === ex.text
+                          ? "bg-quaternary text-white"
+                          : ""
+                      } border-quaternary w-[33.3%]`}
+                      //   onChange={handleInputChange}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExperienceRatingState(ex.text);
+                        handleFormChange("emojistatus", ex.icon);
+                      }}
+                    >
+                      <div className="h-5">
+                        <Image
+                          src={
+                            experienceRatingState === ex.text
+                              ? ex.lightIcon
+                              : ex.icon
+                          }
+                          alt={
+                            experienceRatingState === ex.text
+                              ? ex.lightIcon
+                              : ex.icon
+                          }
+                          width={30}
+                          height={30}
+                          className="h-full w-full"
+                        />
+                      </div>
+                      <p className="font-normal">{ex.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                Your Experience:<span className="text-red-500 text-sm">*</span>
+              </div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {progressCheck.map((progressCheckItem) => {
+                  return (
+                    <button
+                      key={progressCheckItem.id}
+                      type="button"
+                      name="ExperienceSituation"
+                      value={formData.situation}
+                      className={`border border-quaternary w-[95%] flex justify-center items-center rounded-md h-9 ${
+                        progressCheckState === progressCheckItem.text
+                          ? "bg-quaternary text-white"
+                          : ""
+                      } border-quaternary w-[49%]`}
+                      //   onChange={handleInputChange}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFormChange("situation", progressCheckItem.text);
+                        setProgressCheckState(progressCheckItem.text);
+                      }}
+                    >
+                      <p className="font-normal">{progressCheckItem.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            {/* <label className="flex flex-col w-full items-center">
+            <div className="font-semibold w-[95%]">Company Location:</div>
             <input
-              type="text"
-              color="black"
-              name="companyName"
-              value={formData.companyName}
-              placeholder="Company Name"
-              className="border border-black rounded-md w-72 h-9 pl-3"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label className="flex flex-col mt-5">
-            <div className="font-semibold">Job Status</div>
-            <input
-              type="text"
-              color="black"
-              name="jobPosition"
-              value={formData.jobPosition}
-              placeholder="Job Status"
-              className="border border-black rounded-md w-72 h-9 pl-3"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
+            type="text"
+            color="#00224D"
+                name="companyName"
+                value={formData.moroccanCities}
+                placeholder="Search"
+                className="border border-quaternary rounded-md w-[95%] h-9 pl-3"
+                // onChange={handleInputChange}
+                required
+              />
+            </label> */}
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                Contract Type:<span className="text-red-500 text-sm">*</span>
+              </div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {contractType.map((contractTypeItem) => {
+                  return (
+                    <button
+                      key={contractTypeItem.id}
+                      type="button"
+                      name="companyName"
+                      value={formData.contracttype}
+                      className={`border border-quaternary w-[95%] flex justify-center items-center rounded-md h-9 ${
+                        contractTypeState === contractTypeItem.text
+                          ? "bg-quaternary text-white"
+                          : ""
+                      } border-quaternary w-[49%]`}
+                      //   onChange={handleInputChange}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFormChange("contracttype", contractTypeItem.text);
+                        setContractTypeState(contractTypeItem.text);
+                      }}
+                    >
+                      <p className="font-normal">{contractTypeItem.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                Work Location:<span className="text-red-500 text-sm">*</span>
+              </div>
+              <div className="flex w-[95%] items-center gap-1 justify-between">
+                {workLocation.map((workLocationItem) => {
+                  return (
+                    <button
+                      key={workLocationItem.id}
+                      type="button"
+                      name="companyName"
+                      value={formData.workLocation}
+                      className={`border border-quaternary w-[95%] flex justify-center items-center rounded-md h-9 ${
+                        workLocationState === workLocationItem.text
+                          ? "bg-quaternary text-white"
+                          : ""
+                      } border-quaternary w-[49%]`}
+                      //   onChange={handleInputChange}
+                      onClick={() => {
+                        handleFormChange("workLocation", workLocationItem.text);
+                        setWorkLocationState(workLocationItem.text);
+                      }}
+                    >
+                      <p className="font-normal">{workLocationItem.text}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <label className="flex flex-col w-full items-center">
+              <div className="font-semibold w-[95%]">
+                LinkedIn of Company
+                <span className="font-normal w-full"> (Optional)</span>:
+              </div>
+              <input
+                type="text"
+                name="linkedinUrl"
+                value={formData.linkedinUrl}
+                onChange={(e) => {
+                  handleFormChange("linkedinUrl", e.target.value);
+                }}
+                className="border border-quaternary rounded-md p-1 w-[95%] focus:outline-none focus:border focus:border-primary"
+                placeholder="LinkedIn of Company"
+              />
+            </label>
 
-          <div className="flex flex-col items-center mt-5">
-            <div className="font-semibold">
-              How You Rate Your Experience in this Company?
-            </div>
-            <div className="flex w-full items-center gap-5 h-full justify-between">
-              <div
-                className={`flex justify-center items-center border w-36 rounded-md
-                  ${
-                    backgroundE ? "bg-lime-300" : ""
-                  } border-black md:w-[32%]   gap-2`}
-                onClick={() => {
-                  setBackground(!backgroundE);
-                  setBackgroundM(false);
-                  setBackgroundB(false);
-                }}
-              >
-                <div className=" h-7 ">
-                  <Image
-                    src={"/goodEx.png"}
-                    alt=""
-                    width={30}
-                    height={10}
-                    className=" h-full"
-                  />
-                </div>
-                <p className="font-light">Excellent</p>
-              </div>
-              <div
-                className={`flex border border-black justify-center items-center w-36 rounded-md ${
-                  backgroundM ? "bg-amber-400" : ""
-                } md:w-[32%] w-full gap-2`}
-                onClick={() => {
-                  setBackgroundM(!backgroundM);
-                  setBackgroundB(false);
-                  setBackground(false);
-                }}
-              >
-                <div className="w-7 h-7">
-                  <Image
-                    src={"/mediumEx.png"}
-                    alt=""
-                    width={30}
-                    height={10}
-                    className="w-full h-full"
-                  />
-                </div>
-                <p className="font-light">Medium</p>
-              </div>
-              <div
-                className={`flex items-center justify-center border w-36 rounded-md ${
-                  backgroundB ? "bg-red-500" : ""
-                } border-black md:w-[32%] w-full gap-2`}
-                onClick={() => {
-                  setBackgroundB(!backgroundB);
-                  setBackground(false);
-                  setBackgroundM(false);
-                }}
-              >
-                <div className="w-7 h-7">
-                  <Image
-                    src={"/badEx.png"}
-                    alt=""
-                    width={30}
-                    height={10}
-                    className="w-full h-full"
-                  />
-                </div>
-                <p className="font-light">Bad</p>
+            <div className="flex flex-col w-full items-center">
+              <p className="font-semibold w-[95%]">
+                Your Feedback
+                <span className="font-normal w-full"> (Optional)</span>:
+              </p>
+              <div className="h-[150px] w-[95%]">
+                <textarea
+                  id="feedback"
+                  onChange={(e) => {
+                    handleFormChange("feedback", e.target.value);
+                  }}
+                  placeholder="Write your Feedback"
+                  name="feedback"
+                  className="w-full h-full box-border overflow-y-scroll rounded-md p-3 border border-[#00224D] max-h-[140px] min-h-[50px] focus:outline-none focus:border focus:border-primary"
+                ></textarea>
               </div>
             </div>
+            <label className="flex flex-col w-[95%]">
+              <div className="font-semibold">
+                Company Image
+                <span className="font-normal w-full"> (Optional)</span>:
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files)
+                    handleFormChange("image", e.target.files[0]);
+                }}
+                className={`file:border-none hover:file:bg-primary file:bg-quaternary file:text-white file:rounded-md w-[70%] mx-auto`}
+              />
+            </label>
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              className="bg-[#FF204E] text-white hover:bg-white hover:text-primary border-2 border-transparent hover:border-2 hover:border-primary px-4 py-2 rounded-md font-semibold w-[95%]"
+            >
+              Submit
+            </button>
           </div>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">You Still Possed this job</div>
-            <input
-              type="checkbox"
-              name="situation"
-              value={formData.situation}
-              className="border border-black"
-              onChange={handleInputChange}
-              placeholder="Type here"
-            />
-          </label>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Company Location:</div>
-            <select
-              name="moroccanCities"
-              value={formData.moroccanCities}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>
-                Select a city
-              </option>
-              {moroccanCities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Contract Type:</div>
-            <select
-              name="contracttype"
-              value={formData.contracttype}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>
-                Select a Position
-              </option>
-
-              {jobPosition.map((job) => (
-                <option key={job} value={job}>
-                  {job}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Work Location:</div>
-            <select
-              name="workLocation"
-              value={formData.workLocation}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="" disabled>
-                Select a Work Location
-              </option>
-              {workLocations.map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="flex items-center gap-2 mt-5">
-            <div className="font-semibold">Company LinkedIn URL:</div>
-            <input
-              type="text"
-              name="linkedinUrl"
-              value={formData.linkedinUrl}
-              onChange={handleInputChange}
-              className="border border-black rounded-md p-1"
-              placeholder="Company LinkedIn"
-            />
-          </label>
-
-          <div className="mt-5">
-            <p className="font-semibold">Your Feedback (Optional)</p>
-            <div className="h-[150px] w-96 overflow-y-scroll mt-2">
-              <textarea
-                id="feedback"
-                onChange={handleInputChange}
-                placeholder="Write your Feedback"
-                name="feedback"
-                className="w-full h-full rounded-md p-3"
-              ></textarea>
-            </div>
-          </div>
-          <label className="flex gap-2 mt-5">
-            <div className="font-semibold">Company Image:</div>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          </label>
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="bg-quaternary text-white px-4 py-2 mt-5 rounded-md font-semibold"
-          >
-            Submit
-          </button>
         </form>
-        {/* </div> */}
       </Modal>
     </div>
   );
